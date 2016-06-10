@@ -133,20 +133,33 @@ var App = function (_React$Component) {
     _createClass(App, [{
         key: 'componentWillMount',
         value: function componentWillMount() {
-            this.mapTestVariable = {};
+            this.stationData = {};
         }
     }, {
         key: 'componentDidMount',
         value: function componentDidMount() {
+            var _this2 = this;
+
             var props = this.props;
 
-            this.mapTestVariable = _papaparse2.default.parse("/data/station.csv", {
+            _papaparse2.default.parse("/data/station.csv", {
                 download: true,
-                complete: function complete(results) {
+                complete: function complete(result) {
                     console.log('Finished loading');
+                    _this2.stationData = result;
                     props.onStationDataLoaded();
                 }
             });
+        }
+    }, {
+        key: 'loadedStationData',
+        value: function loadedStationData(results) {}
+    }, {
+        key: 'shouldComponentUpdate',
+        value: function shouldComponentUpdate(nextProps, nextState) {
+            console.log("ShouldComponentUpdate");
+            console.log(nextProps);
+            return true;
         }
     }, {
         key: 'render',
@@ -154,7 +167,7 @@ var App = function (_React$Component) {
             var store = this.context.store;
 
             console.log("App render called");
-            console.log(this.mapTestVariable);
+            console.log(this.stationData);
 
             var stationData = {};
             return _react2.default.createElement(
@@ -166,7 +179,7 @@ var App = function (_React$Component) {
                     _react2.default.createElement(
                         'div',
                         { className: 'col-md-6' },
-                        _react2.default.createElement(_MapContainer2.default, { stations: stationData })
+                        _react2.default.createElement(_MapContainer2.default, { stations: this.stationData })
                     ),
                     _react2.default.createElement('div', { className: 'col-md-6' })
                 )
@@ -178,6 +191,7 @@ var App = function (_React$Component) {
 }(_react2.default.Component);
 
 App.propTypes = {
+    stateProps: _react.PropTypes.object.isRequired,
     onStationDataLoaded: _react.PropTypes.func.isRequired
 };
 
@@ -290,7 +304,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var mapStateToProps = function mapStateToProps(state) {
   console.log("StateChanged");
   console.log(state);
-  return {};
+  return {
+    stateProps: {}
+  };
 };
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {

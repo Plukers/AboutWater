@@ -6,7 +6,7 @@ const mapStateToProps = (state) => {
     console.log("StateChanged");
     console.log(state);
   return {
-      
+      stateProps: {}
   }
 }
 

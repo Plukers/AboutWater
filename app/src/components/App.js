@@ -8,32 +8,44 @@ let stationData = {};
 class App extends React.Component {
 
     componentWillMount() {
-        this.mapTestVariable = {};
+        this.stationData = {};
     }
 
     componentDidMount() {    
         const props = this.props;
 
-        this.mapTestVariable = Papa.parse("/data/station.csv", {
+        Papa.parse("/data/station.csv", {
             download: true,
-            complete: function(results) {
+            complete: (result) => {
                 console.log('Finished loading');
+                this.stationData = result;
                 props.onStationDataLoaded();
             }
         });
     }
 
+    loadedStationData(results) {
+        
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        console.log("ShouldComponentUpdate");
+        console.log(nextProps);
+        return true;
+    }
+
+
     render() {
         const { store } = this.context;
         console.log("App render called");
-        console.log(this.mapTestVariable);
+        console.log(this.stationData);
 
         const stationData = {};
         return (
             <div className='container-fluid'>
                 <div className='row'>
                     <div className='col-md-6'>
-                        <MapContainer stations={stationData}/>
+                        <MapContainer stations={this.stationData}/>
                     </div>
                     <div className='col-md-6'>
                         
@@ -45,6 +57,7 @@ class App extends React.Component {
 }
 
 App.propTypes = {
+  stateProps: PropTypes.object.isRequired,
   onStationDataLoaded: PropTypes.func.isRequired
 }
 
