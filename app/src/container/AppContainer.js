@@ -3,8 +3,10 @@ import { stationsLoaded } from '../actions/StationFilterActions'
 import App from '../components/App'
 
 const mapStateToProps = (state) => {
+    console.log("StateChanged");
+    console.log(state);
   return {
-
+      
   }
 }
 

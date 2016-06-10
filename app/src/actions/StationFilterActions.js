@@ -1,4 +1,9 @@
-import { SELECT_STATION, DESELECT_STATION, DESELECT_ALL, STATIONS_LOADED } from './ActionTypes';
+import { 
+         SELECT_STATION, 
+         DESELECT_STATION, 
+         DESELECT_ALL, 
+         STATIONS_LOADED 
+        } from './ActionTypes'
 
 export function selectStation(id) {
   return {

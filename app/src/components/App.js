@@ -1,36 +1,23 @@
 import React, { PropTypes } from 'react'
-import Papa from 'papaparse';
+import Papa from 'papaparse'
 
-import MapContainer from '../container/MapContainer';
+import MapContainer from '../container/MapContainer'
 
 let stationData = {};
 
 class App extends React.Component {
 
-    test() {
-        console.log("Test succeed");
-    }
-
     componentWillMount() {
-        this.a = {};
+        this.mapTestVariable = {};
     }
 
     componentDidMount() {    
         const props = this.props;
 
-        this.a = Papa.parse("/data/station.csv", {
+        this.mapTestVariable = Papa.parse("/data/station.csv", {
             download: true,
             complete: function(results) {
-
-                console.log('Finished');
-                /*
-                test();
-
-                stationData = results;
-                console.log(stationsData);
-                console.log(results);
-
-                */
+                console.log('Finished loading');
                 props.onStationDataLoaded();
             }
         });
@@ -39,7 +26,7 @@ class App extends React.Component {
     render() {
         const { store } = this.context;
         console.log("App render called");
-        console.log(this.a);
+        console.log(this.mapTestVariable);
 
         const stationData = {};
         return (

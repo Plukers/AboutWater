@@ -1,13 +1,13 @@
-import { combineReducers } from 'redux';
-import timeFilter from './TimeFilter';
-import depthFilter from './DepthFilter';
-import stationFilter from './StationFilter';
+import { combineReducers } from 'redux'
+import TimeFilter from './TimeFilter'
+import DepthFilter from './DepthFilter'
+import StationFilter from './StationFilter'
 
 
-const appReducer = combineReducers({
-  timeFilter,
-  depthFilter,
-  stationFilter
+const AppReducer = combineReducers({
+  TimeFilter,
+  DepthFilter,
+  StationFilter
 })
 
-export default appReducer
+export default AppReducer

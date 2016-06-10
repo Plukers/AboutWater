@@ -3,7 +3,7 @@ import deepFreeze from 'deep-freeze'
 
 import { TIME_FROM, TIME_TILL } from '../actions/ActionTypes';
 
-const timeFilter = (state  = Immutable.Map({from:0, till:3000}), action) => {
+const TimeFilter = (state  = Immutable.Map({from:0, till:3000}), action) => {
 
     deepFreeze(state);
 
@@ -20,4 +20,4 @@ const timeFilter = (state  = Immutable.Map({from:0, till:3000}), action) => {
     }
 }
 
-export default timeFilter
+export default TimeFilter

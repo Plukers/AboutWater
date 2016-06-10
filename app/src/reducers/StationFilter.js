@@ -8,7 +8,7 @@ import {
          STATIONS_LOADED  
         } from '../actions/ActionTypes'
 
-const stationFilter = (state  =  {loaded: false, selected: Immutable.Set()}, action) => {
+const StationFilter = (state  =  {loaded: false, selected: Immutable.Set()}, action) => {
 
     deepFreeze(state);
 
@@ -16,17 +16,17 @@ const stationFilter = (state  =  {loaded: false, selected: Immutable.Set()}, act
 
         case SELECT_STATION:
             return Object.assign({}, state, {
-                selected: selected.add(action.id)
+                selected: state.selected.add(action.id)
             });
 
         case DESELECT_STATION:
             return Object.assign({}, state, {
-                selected: selected.delete(action.id)
+                selected: statle.selected.delete(action.id)
             });
 
         case DESELECT_ALL:
             return Object.assign({}, state, {
-                selected: selected.clear()
+                selected: state.selected.clear()
             });
 
         case STATIONS_LOADED:
@@ -39,4 +39,4 @@ const stationFilter = (state  =  {loaded: false, selected: Immutable.Set()}, act
     }
 }
 
-export default stationFilter
+export default StationFilter

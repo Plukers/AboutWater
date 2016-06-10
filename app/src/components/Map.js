@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom'
 import ImmutablePropTypes from 'react-immutable-proptypes'
-import L from 'leaflet';
+import L from 'leaflet'
 
 class Map extends React.Component {
 
@@ -27,7 +27,7 @@ class Map extends React.Component {
     }
 
     onMapClick() {
-        // Do some wonderful map things...
+
     }
 
     render() {

@@ -1,4 +1,4 @@
-import { DEPTH_FROM, DEPTH_TILL } from './ActionTypes';
+import { DEPTH_FROM, DEPTH_TILL } from './ActionTypes'
 
 export function depthFrom(depth) {
   return {

@@ -4,7 +4,7 @@ import Map from '../components/Map'
 
 const mapStateToProps = (state) => {
   return {
-      selected: state.stationFilter.selected
+      selected: state.StationFilter.selected
   }
 }
 

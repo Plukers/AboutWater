@@ -1,4 +1,4 @@
-import { TIME_FROM, TIME_TILL } from './ActionTypes';
+import { TIME_FROM, TIME_TILL } from './ActionTypes'
 
 export function timeFrom(year) {
   return {
