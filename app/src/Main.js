@@ -1,13 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+import promise from 'redux-promise';
+import createLogger from 'redux-logger';
 
 import AppReducer from './reducers/Reducer';
-import App from './components/App';
+import AppContainer from './container/AppContainer';
 
-const store = createStore(AppReducer);
+const logger = createLogger();
 
 ReactDOM.render(
-        <App store={store} />,
+        <Provider store={createStore(AppReducer, applyMiddleware(thunk, promise, logger))}>
+          <AppContainer/>
+        </Provider>,
         document.getElementById('root')
       );
