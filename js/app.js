@@ -85,7 +85,6 @@ function deselectAll() {
 }
 
 function stationsLoaded() {
-  console.log('StationsLoaded called');
   return {
     type: _ActionTypes.STATIONS_LOADED
   };
@@ -106,6 +105,10 @@ var _react2 = _interopRequireDefault(_react);
 var _papaparse = require('papaparse');
 
 var _papaparse2 = _interopRequireDefault(_papaparse);
+
+var _immutable = require('immutable');
+
+var _immutable2 = _interopRequireDefault(_immutable);
 
 var _MapContainer = require('../container/MapContainer');
 
@@ -133,7 +136,7 @@ var App = function (_React$Component) {
     _createClass(App, [{
         key: 'componentWillMount',
         value: function componentWillMount() {
-            this.stationData = {};
+            this.stationData = [];
         }
     }, {
         key: 'componentDidMount',
@@ -145,31 +148,17 @@ var App = function (_React$Component) {
             _papaparse2.default.parse("/data/station.csv", {
                 download: true,
                 complete: function complete(result) {
-                    console.log('Finished loading');
-                    _this2.stationData = result;
+                    _this2.stationData = _immutable2.default.List(result.data).delete(0); // remove first row of the table
                     props.onStationDataLoaded();
                 }
             });
-        }
-    }, {
-        key: 'loadedStationData',
-        value: function loadedStationData(results) {}
-    }, {
-        key: 'shouldComponentUpdate',
-        value: function shouldComponentUpdate(nextProps, nextState) {
-            console.log("ShouldComponentUpdate");
-            console.log(nextProps);
-            return true;
         }
     }, {
         key: 'render',
         value: function render() {
             var store = this.context.store;
 
-            console.log("App render called");
-            console.log(this.stationData);
 
-            var stationData = {};
             return _react2.default.createElement(
                 'div',
                 { className: 'container-fluid' },
@@ -196,7 +185,7 @@ App.propTypes = {
 };
 
 exports.default = App;
-},{"../container/MapContainer":7,"papaparse":48,"react":196}],5:[function(require,module,exports){
+},{"../container/MapContainer":7,"immutable":40,"papaparse":48,"react":196}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -212,6 +201,10 @@ var _react2 = _interopRequireDefault(_react);
 var _reactDom = require('react-dom');
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _immutable = require('immutable');
+
+var _immutable2 = _interopRequireDefault(_immutable);
 
 var _reactImmutableProptypes = require('react-immutable-proptypes');
 
@@ -247,11 +240,20 @@ var Map = function (_React$Component) {
             var MB_URL = 'https://api.mapbox.com/styles/v1/{id}/cip8h2g48002qdmm2u4zxmoco/tiles/{z}/{x}/{y}?access_token=' + ACCESS_TOKEN;
             var OSM_URL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
             var OSM_ATTRIB = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-
             this.map = _leaflet2.default.map('map').setView([37.816508, -121.914375], 9);
+
             _leaflet2.default.tileLayer(MB_URL, { attribution: MB_ATTR, id: 'lupro' }).addTo(this.map);
 
-            this.map.on('click', this.onMapClick);
+            this.greenIcon = _leaflet2.default.icon({
+                iconUrl: '../../../images/marker.png',
+
+                iconSize: [20, 29], // size of the icon
+                iconAnchor: [10, 29], // point of the icon which will correspond to marker's location
+                popupAnchor: [0, -29] // point from which the popup should open relative to the iconAnchor
+            });
+
+            this.markers = new _leaflet2.default.FeatureGroup();
+            this.map.addLayer(this.markers);
         }
     }, {
         key: 'componentWillUnmount',
@@ -260,15 +262,36 @@ var Map = function (_React$Component) {
             this.map = null;
         }
     }, {
-        key: 'onMapClick',
-        value: function onMapClick() {}
+        key: 'onMarkerClick',
+        value: function onMarkerClick(event) {
+            console.log('Selected station ' + event.target.id);
+        }
     }, {
         key: 'render',
         value: function render() {
+            var _this2 = this;
 
-            console.log("Map render called");
             var props = this.props;
-            console.log(props);
+
+            var stationData = typeof this.props.stations !== 'undefined' ? this.props.stations : [];
+
+            stationData.map(function (s) {
+
+                var m = _leaflet2.default.marker(new _leaflet2.default.LatLng(parseFloat(s[3]), parseFloat(s[4])), { icon: _this2.greenIcon }).addTo(_this2.map).bindPopup('<strong>' + s[1] + '</strong><br>Depth: ' + s[2] + 'm').openPopup();
+
+                m.id = parseInt(s[0]);
+
+                m.on('mouseover', function (e) {
+                    this.openPopup();
+                });
+                m.on('mouseout', function (e) {
+                    this.closePopup();
+                });
+
+                m.on('click', _this2.onMarkerClick);
+
+                _this2.markers.addLayer(m);
+            });
 
             return _react2.default.createElement('div', { id: 'map', className: 'map' });
         }
@@ -284,7 +307,7 @@ Map.propTypes = {
 };
 
 exports.default = Map;
-},{"leaflet":42,"react":196,"react-dom":50,"react-immutable-proptypes":51}],6:[function(require,module,exports){
+},{"immutable":40,"leaflet":42,"react":196,"react-dom":50,"react-immutable-proptypes":51}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -302,8 +325,6 @@ var _App2 = _interopRequireDefault(_App);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var mapStateToProps = function mapStateToProps(state) {
-  console.log("StateChanged");
-  console.log(state);
   return {
     stateProps: {}
   };

@@ -1,5 +1,6 @@
 import { connect } from 'react-redux'
 import { selectStation, deselectStation } from '../actions/StationFilterActions'
+
 import Map from '../components/Map'
 
 const mapStateToProps = (state) => {

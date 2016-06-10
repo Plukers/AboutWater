@@ -26,7 +26,6 @@ export function deselectAll() {
 }
 
 export function stationsLoaded() {
-  console.log('StationsLoaded called');
   return {
     type: STATIONS_LOADED
   }

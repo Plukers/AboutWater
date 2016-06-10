@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import Papa from 'papaparse'
+import Immutable from 'immutable'
 
 import MapContainer from '../container/MapContainer'
 
@@ -8,7 +9,7 @@ let stationData = {};
 class App extends React.Component {
 
     componentWillMount() {
-        this.stationData = {};
+        this.stationData = [];
     }
 
     componentDidMount() {    
@@ -17,30 +18,15 @@ class App extends React.Component {
         Papa.parse("/data/station.csv", {
             download: true,
             complete: (result) => {
-                console.log('Finished loading');
-                this.stationData = result;
+                this.stationData = Immutable.List(result.data).delete(0);// remove first row of the table
                 props.onStationDataLoaded();
             }
         });
     }
 
-    loadedStationData(results) {
-        
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        console.log("ShouldComponentUpdate");
-        console.log(nextProps);
-        return true;
-    }
-
-
     render() {
         const { store } = this.context;
-        console.log("App render called");
-        console.log(this.stationData);
 
-        const stationData = {};
         return (
             <div className='container-fluid'>
                 <div className='row'>
