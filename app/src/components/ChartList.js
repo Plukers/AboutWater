@@ -21,6 +21,8 @@ class ChartList extends React.Component {
             );
         });
 
+        
+
         const charts = dts.map((property, key) => {
             return (
                 <Chart key={key} property={property} />
