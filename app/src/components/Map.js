@@ -27,6 +27,22 @@ class Map extends React.Component {
             popupAnchor:  [0, -29] // point from which the popup should open relative to the iconAnchor
         });
 
+        this.greyIcon = L.icon({
+            iconUrl: '../../../images/marker_grey.png',
+
+            iconSize:     [20, 29], // size of the icon
+            iconAnchor:   [10, 29], // point of the icon which will correspond to marker's location
+            popupAnchor:  [0, -29] // point from which the popup should open relative to the iconAnchor
+        });
+
+        this.brightIcon = L.icon({
+            iconUrl: '../../../images/marker_bright.png',
+
+            iconSize:     [20, 29], // size of the icon
+            iconAnchor:   [10, 29], // point of the icon which will correspond to marker's location
+            popupAnchor:  [0, -29] // point from which the popup should open relative to the iconAnchor
+        });
+
 
         this.markers = new L.FeatureGroup();
         this.map.addLayer(this.markers);
@@ -38,19 +54,31 @@ class Map extends React.Component {
         this.map = null;
     }
 
-    onMarkerClick(event) {
-        console.log('Selected station ' + event.target.id);
-    }
-
     render() {
         const props = this.props;
 
         const stationData = typeof this.props.stations !== 'undefined' ? this.props.stations : [];
 
+        const selectionExisting = 0 !== this.props.selected.size;
+        
+        if(typeof this.markers !== 'undefined') {
+            console.log(this.markers);
+            this.markers.clearLayers();
+        }
 
         stationData.map((s) => {
-        
-            const m = L.marker(new L.LatLng(parseFloat(s[3]), parseFloat(s[4])), {icon: this.greenIcon}).addTo(this.map)
+
+            let icon = this.greenIcon;
+
+            if(selectionExisting) {
+                if(this.props.selected.has(parseInt(s[0]))) {
+                    icon = this.brightIcon;
+                } else {
+                    icon = this.greyIcon;
+                }                
+            } 
+
+            const m = L.marker(new L.LatLng(parseFloat(s[3]), parseFloat(s[4])), {icon: icon}).addTo(this.map)
                 .bindPopup('<strong>' + s[1] + '</strong><br>Depth: ' + s[2] + 'm')
                 .openPopup();
 
@@ -62,8 +90,12 @@ class Map extends React.Component {
             m.on('mouseout', function (e) {
                 this.closePopup();
             });
+
+            const onMarkerClick = (event) => {
+                props.onToggleStation(event.target.id);
+            }
             
-             m.on('click', this.onMarkerClick);
+            m.on('click', onMarkerClick);
 
             this.markers.addLayer(m);
 
@@ -76,8 +108,8 @@ class Map extends React.Component {
 }
 
 Map.propTypes = {
-  onSelectStation: PropTypes.func.isRequired,
-  onDeselectStation: PropTypes.func.isRequired,
+  onToggleStation: PropTypes.func.isRequired,
+  onDeselectAll: PropTypes.func.isRequired,
   selected: ImmutablePropTypes.set 
 }
 

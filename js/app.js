@@ -21,7 +21,7 @@ var _Reducer = require('./reducers/Reducer');
 
 var _Reducer2 = _interopRequireDefault(_Reducer);
 
-var _AppContainer = require('./container/AppContainer');
+var _AppContainer = require('./components/AppContainer');
 
 var _AppContainer2 = _interopRequireDefault(_AppContainer);
 
@@ -35,7 +35,7 @@ _reactDom2.default.render(_react2.default.createElement(
   { store: store },
   _react2.default.createElement(_AppContainer2.default, null)
 ), document.getElementById('root'));
-},{"./container/AppContainer":6,"./reducers/Reducer":9,"react":196,"react-dom":50,"react-redux":54,"redux":203,"redux-logger":197}],2:[function(require,module,exports){
+},{"./components/AppContainer":5,"./reducers/Reducer":9,"react":196,"react-dom":50,"react-redux":54,"redux":203,"redux-logger":197}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -44,9 +44,8 @@ Object.defineProperty(exports, "__esModule", {
 var DEPTH_FROM = exports.DEPTH_FROM = 'DEPTH_FROM';
 var DEPTH_TILL = exports.DEPTH_TILL = 'DEPTH_TILL';
 
-var SELECT_STATION = exports.SELECT_STATION = 'SELECT_STATION';
-var DESELECT_STATION = exports.DESELECT_STATION = 'DESELECT_STATION';
-var DESELECT_ALL = exports.DESELECT_ALL = 'DESELECT_ALL';
+var TOGGLE_STATION_SELECTION = exports.TOGGLE_STATION_SELECTION = 'TOGGLE_STATION_SELECTION';
+var DESELECT_ALL_STATIONS = exports.DESELECT_ALL_STATIONS = 'DESELECT_ALL_STATIONS';
 var STATIONS_LOADED = exports.STATIONS_LOADED = 'STATIONS_LOADED';
 
 var TIME_FROM = exports.TIME_FROM = 'TIME_FROM';
@@ -57,30 +56,22 @@ var TIME_TILL = exports.TIME_TILL = 'TIME_TILL';
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.selectStation = selectStation;
-exports.deselectStation = deselectStation;
-exports.deselectAll = deselectAll;
+exports.toggleStationSelection = toggleStationSelection;
+exports.deselectAllStations = deselectAllStations;
 exports.stationsLoaded = stationsLoaded;
 
 var _ActionTypes = require('./ActionTypes');
 
-function selectStation(id) {
+function toggleStationSelection(id) {
   return {
-    type: _ActionTypes.SELECT_STATION,
+    type: _ActionTypes.TOGGLE_STATION_SELECTION,
     id: id
   };
 }
 
-function deselectStation(id) {
+function deselectAllStations() {
   return {
-    type: _ActionTypes.DESELECT_STATION,
-    id: id
-  };
-}
-
-function deselectAll() {
-  return {
-    type: _ActionTypes.DESELECT_ALL
+    type: _ActionTypes.DESELECT_ALL_STATIONS
   };
 }
 
@@ -110,7 +101,7 @@ var _immutable = require('immutable');
 
 var _immutable2 = _interopRequireDefault(_immutable);
 
-var _MapContainer = require('../container/MapContainer');
+var _MapContainer = require('./MapContainer');
 
 var _MapContainer2 = _interopRequireDefault(_MapContainer);
 
@@ -137,6 +128,8 @@ var App = function (_React$Component) {
         key: 'componentWillMount',
         value: function componentWillMount() {
             this.stationData = [];
+            this.waterDataMeta = [];
+            this.waterData = [];
         }
     }, {
         key: 'componentDidMount',
@@ -148,8 +141,25 @@ var App = function (_React$Component) {
             _papaparse2.default.parse("/data/station.csv", {
                 download: true,
                 complete: function complete(result) {
-                    _this2.stationData = _immutable2.default.List(result.data).delete(0); // remove first row of the table
+                    _this2.stationData = _immutable2.default.List(result.data).delete(0);
                     props.onStationDataLoaded();
+                }
+            });
+
+            _papaparse2.default.parse("/data/SFBay.csv", {
+                download: true,
+                complete: function complete(result) {
+                    var tmp = _immutable2.default.List(result.data);
+                    _this2.waterDataMeta = tmp.first();
+
+                    _this2.waterData = tmp.delete(0);
+
+                    _this2.waterData.forEach(function (e, key) {
+                        e[0] = new Date(e[0]);
+                        for (var i = 1; i < 26; i++) {
+                            e[i] = Number(e[i]);
+                        }
+                    });
                 }
             });
         }
@@ -185,7 +195,41 @@ App.propTypes = {
 };
 
 exports.default = App;
-},{"../container/MapContainer":7,"immutable":40,"papaparse":48,"react":196}],5:[function(require,module,exports){
+},{"./MapContainer":7,"immutable":40,"papaparse":48,"react":196}],5:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _reactRedux = require('react-redux');
+
+var _StationFilterActions = require('../actions/StationFilterActions');
+
+var _App = require('../components/App');
+
+var _App2 = _interopRequireDefault(_App);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    stateProps: {}
+  };
+};
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    onStationDataLoaded: function onStationDataLoaded() {
+      dispatch((0, _StationFilterActions.stationsLoaded)());
+    }
+  };
+};
+
+var AppContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_App2.default);
+
+exports.default = AppContainer;
+},{"../actions/StationFilterActions":3,"../components/App":4,"react-redux":54}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -252,6 +296,22 @@ var Map = function (_React$Component) {
                 popupAnchor: [0, -29] // point from which the popup should open relative to the iconAnchor
             });
 
+            this.greyIcon = _leaflet2.default.icon({
+                iconUrl: '../../../images/marker_grey.png',
+
+                iconSize: [20, 29], // size of the icon
+                iconAnchor: [10, 29], // point of the icon which will correspond to marker's location
+                popupAnchor: [0, -29] // point from which the popup should open relative to the iconAnchor
+            });
+
+            this.brightIcon = _leaflet2.default.icon({
+                iconUrl: '../../../images/marker_bright.png',
+
+                iconSize: [20, 29], // size of the icon
+                iconAnchor: [10, 29], // point of the icon which will correspond to marker's location
+                popupAnchor: [0, -29] // point from which the popup should open relative to the iconAnchor
+            });
+
             this.markers = new _leaflet2.default.FeatureGroup();
             this.map.addLayer(this.markers);
         }
@@ -262,11 +322,6 @@ var Map = function (_React$Component) {
             this.map = null;
         }
     }, {
-        key: 'onMarkerClick',
-        value: function onMarkerClick(event) {
-            console.log('Selected station ' + event.target.id);
-        }
-    }, {
         key: 'render',
         value: function render() {
             var _this2 = this;
@@ -275,9 +330,26 @@ var Map = function (_React$Component) {
 
             var stationData = typeof this.props.stations !== 'undefined' ? this.props.stations : [];
 
+            var selectionExisting = 0 !== this.props.selected.size;
+
+            if (typeof this.markers !== 'undefined') {
+                console.log(this.markers);
+                this.markers.clearLayers();
+            }
+
             stationData.map(function (s) {
 
-                var m = _leaflet2.default.marker(new _leaflet2.default.LatLng(parseFloat(s[3]), parseFloat(s[4])), { icon: _this2.greenIcon }).addTo(_this2.map).bindPopup('<strong>' + s[1] + '</strong><br>Depth: ' + s[2] + 'm').openPopup();
+                var icon = _this2.greenIcon;
+
+                if (selectionExisting) {
+                    if (_this2.props.selected.has(parseInt(s[0]))) {
+                        icon = _this2.brightIcon;
+                    } else {
+                        icon = _this2.greyIcon;
+                    }
+                }
+
+                var m = _leaflet2.default.marker(new _leaflet2.default.LatLng(parseFloat(s[3]), parseFloat(s[4])), { icon: icon }).addTo(_this2.map).bindPopup('<strong>' + s[1] + '</strong><br>Depth: ' + s[2] + 'm').openPopup();
 
                 m.id = parseInt(s[0]);
 
@@ -288,7 +360,11 @@ var Map = function (_React$Component) {
                     this.closePopup();
                 });
 
-                m.on('click', _this2.onMarkerClick);
+                var onMarkerClick = function onMarkerClick(event) {
+                    props.onToggleStation(event.target.id);
+                };
+
+                m.on('click', onMarkerClick);
 
                 _this2.markers.addLayer(m);
             });
@@ -301,47 +377,13 @@ var Map = function (_React$Component) {
 }(_react2.default.Component);
 
 Map.propTypes = {
-    onSelectStation: _react.PropTypes.func.isRequired,
-    onDeselectStation: _react.PropTypes.func.isRequired,
+    onToggleStation: _react.PropTypes.func.isRequired,
+    onDeselectAll: _react.PropTypes.func.isRequired,
     selected: _reactImmutableProptypes2.default.set
 };
 
 exports.default = Map;
-},{"immutable":40,"leaflet":42,"react":196,"react-dom":50,"react-immutable-proptypes":51}],6:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _reactRedux = require('react-redux');
-
-var _StationFilterActions = require('../actions/StationFilterActions');
-
-var _App = require('../components/App');
-
-var _App2 = _interopRequireDefault(_App);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var mapStateToProps = function mapStateToProps(state) {
-  return {
-    stateProps: {}
-  };
-};
-
-var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-  return {
-    onStationDataLoaded: function onStationDataLoaded() {
-      dispatch((0, _StationFilterActions.stationsLoaded)());
-    }
-  };
-};
-
-var AppContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_App2.default);
-
-exports.default = AppContainer;
-},{"../actions/StationFilterActions":3,"../components/App":4,"react-redux":54}],7:[function(require,module,exports){
+},{"immutable":40,"leaflet":42,"react":196,"react-dom":50,"react-immutable-proptypes":51}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -366,11 +408,11 @@ var mapStateToProps = function mapStateToProps(state) {
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     return {
-        onSelectStation: function onSelectStation(id) {
-            dispatch((0, _StationFilterActions.selectStation)(id));
+        onToggleStation: function onToggleStation(id) {
+            dispatch((0, _StationFilterActions.toggleStationSelection)(id));
         },
-        onDeselectStation: function onDeselectStation(id) {
-            dispatch((0, _StationFilterActions.deselectStation)(id));
+        onDeselectAll: function onDeselectAll() {
+            dispatch((0, _StationFilterActions.deselectAllStations)());
         }
     };
 };
@@ -378,7 +420,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 var MapContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_Map2.default);
 
 exports.default = MapContainer;
-},{"../actions/StationFilterActions":3,"../components/Map":5,"react-redux":54}],8:[function(require,module,exports){
+},{"../actions/StationFilterActions":3,"../components/Map":6,"react-redux":54}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -476,17 +518,18 @@ var StationFilter = function StationFilter() {
 
     switch (action.type) {
 
-        case _ActionTypes.SELECT_STATION:
-            return Object.assign({}, state, {
-                selected: state.selected.add(action.id)
-            });
+        case _ActionTypes.TOGGLE_STATION_SELECTION:
+            if (state.selected.has(action.id)) {
+                return Object.assign({}, state, {
+                    selected: state.selected.delete(action.id)
+                });
+            } else {
+                return Object.assign({}, state, {
+                    selected: state.selected.add(action.id)
+                });
+            }
 
-        case _ActionTypes.DESELECT_STATION:
-            return Object.assign({}, state, {
-                selected: statle.selected.delete(action.id)
-            });
-
-        case _ActionTypes.DESELECT_ALL:
+        case _ActionTypes.DESELECT_ALL_STATIONS:
             return Object.assign({}, state, {
                 selected: state.selected.clear()
             });

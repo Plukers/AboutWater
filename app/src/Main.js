@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import createLogger from 'redux-logger'
 
 import AppReducer from './reducers/Reducer';
-import AppContainer from './container/AppContainer';
+import AppContainer from './components/AppContainer';
 
 const logger = createLogger();
 const store = createStore(AppReducer, applyMiddleware(logger));

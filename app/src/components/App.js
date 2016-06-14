@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import Papa from 'papaparse'
 import Immutable from 'immutable'
 
-import MapContainer from '../container/MapContainer'
+import MapContainer from './MapContainer'
 
 let stationData = {};
 
@@ -10,6 +10,8 @@ class App extends React.Component {
 
     componentWillMount() {
         this.stationData = [];
+        this.waterDataMeta = [];
+        this.waterData = [];
     }
 
     componentDidMount() {    
@@ -18,8 +20,25 @@ class App extends React.Component {
         Papa.parse("/data/station.csv", {
             download: true,
             complete: (result) => {
-                this.stationData = Immutable.List(result.data).delete(0);// remove first row of the table
+                this.stationData = Immutable.List(result.data).delete(0);
                 props.onStationDataLoaded();
+            }
+        });
+
+        Papa.parse("/data/SFBay.csv", {
+            download: true,
+            complete: (result) => {
+                const tmp = Immutable.List(result.data);
+                this.waterDataMeta = tmp.first();
+
+                this.waterData = tmp.delete(0);
+
+                this.waterData.forEach((e, key) => {
+                    e[0] = new Date(e[0]);
+                    for (let i = 1; i < 26; i++) {
+                        e[i] = Number(e[i]);
+                    }
+                });
             }
         });
     }

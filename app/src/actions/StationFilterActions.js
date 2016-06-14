@@ -1,27 +1,19 @@
 import { 
-         SELECT_STATION, 
-         DESELECT_STATION, 
-         DESELECT_ALL, 
+         TOGGLE_STATION_SELECTION, 
+         DESELECT_ALL_STATIONS, 
          STATIONS_LOADED 
         } from './ActionTypes'
 
-export function selectStation(id) {
+export function toggleStationSelection(id) {
   return {
-    type: SELECT_STATION,
+    type: TOGGLE_STATION_SELECTION,
     id
   }
 }
 
-export function deselectStation(id) {
+export function deselectAllStations() {
   return {
-    type: DESELECT_STATION,
-    id
-  }
-}
-
-export function deselectAll() {
-  return {
-    type: DESELECT_ALL
+    type: DESELECT_ALL_STATIONS
   }
 }
 
