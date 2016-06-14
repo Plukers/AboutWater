@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
-import { toggleStationSelection, deselectAllStations } from '../actions/StationFilterActions'
+import { toggleStationSelection, deselectAllStations } from '../../actions/StationFilterActions'
 
-import Map from '../components/Map'
+import Map from '../Map'
 
 const mapStateToProps = (state) => {
   return {

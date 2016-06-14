@@ -2,9 +2,8 @@ import React, { PropTypes } from 'react'
 import Papa from 'papaparse'
 import Immutable from 'immutable'
 
-import MapContainer from './MapContainer'
-
-let stationData = {};
+import MapContainer from './container/MapContainer'
+import ChartListContainer from './container/ChartListContainer'
 
 class App extends React.Component {
 
@@ -30,7 +29,6 @@ class App extends React.Component {
             complete: (result) => {
                 const tmp = Immutable.List(result.data);
                 this.waterDataMeta = tmp.first();
-
                 this.waterData = tmp.delete(0);
 
                 this.waterData.forEach((e, key) => {
@@ -39,6 +37,8 @@ class App extends React.Component {
                         e[i] = Number(e[i]);
                     }
                 });
+
+                props.onDataLoaded();
             }
         });
     }
@@ -50,10 +50,10 @@ class App extends React.Component {
             <div className='container-fluid'>
                 <div className='row'>
                     <div className='col-md-6'>
-                        <MapContainer stations={this.stationData}/>
+                        <MapContainer stations={this.stationData}/> 
                     </div>
                     <div className='col-md-6'>
-                        
+                        <ChartListContainer meta={this.waterDataMeta} data={this.waterData} />
                     </div>
                 </div>
             </div>
@@ -63,7 +63,8 @@ class App extends React.Component {
 
 App.propTypes = {
   stateProps: PropTypes.object.isRequired,
-  onStationDataLoaded: PropTypes.func.isRequired
+  onStationDataLoaded: PropTypes.func.isRequired,
+  onDataLoaded: PropTypes.func.isRequired,
 }
 
 
