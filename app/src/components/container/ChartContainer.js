@@ -4,7 +4,8 @@ import Chart from '../Chart'
 
 const mapStateToProps = (state) => {
   return {
-      stateProp: {}
+      fromTime: state.TimeFilter.get('from'),
+      tillTime: state.TimeFilter.get('till')
   }
 }
 
