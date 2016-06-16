@@ -2,10 +2,11 @@ import React, { PropTypes } from 'react'
 import Papa from 'papaparse'
 import Immutable from 'immutable'
 import { DropdownButton, MenuItem, Navbar, Nav, NavItem, NavDropdown, Form, FormGroup, FormControl, ControlLabel, Button,
-         ButtonGroup } from 'react-bootstrap'
+         ButtonGroup, Radio } from 'react-bootstrap'
 
 import MapContainer from './container/MapContainer' 
 import ChartListContainer from './container/ChartListContainer'
+import { propToColumn } from '../util/PropToColumn'
 
 class App extends React.Component {
 
@@ -31,6 +32,8 @@ class App extends React.Component {
             complete: (result) => {
                 const tmp = Immutable.List(result.data);
                 this.waterDataMeta = tmp.first();
+                this.waterDataMeta.splice(0,4);
+
                 this.waterData = tmp.delete(0);
 
                 this.waterData.forEach((e, key) => {
@@ -57,13 +60,31 @@ class App extends React.Component {
         return "" + date.getFullYear() + "-" + monthString + "-" + date.getDate();
     }
 
+    cleanData(data, fromTime, tillTime) {
+
+        let result = Immutable.List();
+
+        data.forEach((e, k) => { 
+            if(k == 1) {
+                console.log(e);
+            }
+            if(e[propToColumn('TimeStamp')] > fromTime && e[propToColumn('TimeStamp')] < tillTime) {
+                result = result.insert(k, e)
+            }
+
+        });
+
+        console.log(result);
+
+        return data;
+    }
+
     render() {
         const { store } = this.context;
         const props = this.props;
 
         const onDateChange = () => {
-            console.log(document.getElementById('formInlineDateStart').value);
-            console.log(document.getElementById('formInlineDateEnd').value);
+            props.setTimeRange(new Date(document.getElementById('formInlineDateStart').value), new Date(document.getElementById('formInlineDateEnd').value));
         };
 
         const formInstanceDate = (
@@ -72,9 +93,9 @@ class App extends React.Component {
                     <ControlLabel>Time from </ControlLabel>
                     {' '}
                     <FormControl type="date" defaultValue={this.dateToString(props.fromDate)}/>
-                    </FormGroup>
+                </FormGroup>
                     {' '}
-                    <FormGroup controlId="formInlineDateEnd">
+                <FormGroup controlId="formInlineDateEnd">
                     <ControlLabel> till </ControlLabel>
                     {' '}
                     <FormControl type="date"  defaultValue={this.dateToString(props.tillDate)} />
@@ -87,8 +108,7 @@ class App extends React.Component {
         );
 
         const onDepthChange = () => {
-            console.log(document.getElementById('formInlineDepthStart').value);
-            console.log(document.getElementById('formInlineDepthEnd').value);
+            props.setDepthRange(Number(document.getElementById('formInlineDepthStart').value), Number(document.getElementById('formInlineDepthEnd').value));
         };
 
         const formInstanceDepth = (
@@ -111,6 +131,20 @@ class App extends React.Component {
             </Form>
         );
 
+        const formInstanceSelection = (
+            <Form inline>
+                <FormGroup>
+                    <ButtonGroup>                                             
+                            <DropdownButton title={props.group == 0 ? "Add to Group Red" : "Add to Group Yellow" } id="add-property-dropdown">
+                                <MenuItem onClick={() => props.changeSelectionGroup(1)}> Add to Group Yellow </MenuItem>
+                                <MenuItem onClick={() => props.changeSelectionGroup(0)}> Add to Group Red </MenuItem>
+                            </DropdownButton> 
+                            <Button onClick={() => props.clearStationSelection()} > Clear Group Selections </Button>                                
+                        </ButtonGroup>
+                </FormGroup>
+            </Form>
+        )
+
         const propertyOptions = this.waterDataMeta.map((property, key) => {
             return (
                 <MenuItem key={key} eventKey={key} onClick={() => props.toggleProperty({property})}>{property}</MenuItem>
@@ -129,7 +163,11 @@ class App extends React.Component {
                             <div className='col-md-12'>
                                 {formInstanceDepth}  
                             </div>
-                            
+                            <hr />
+                            <div className='col-md-5'/>
+                            <div className='col-md-7' id='stationSelection'>
+                                {formInstanceSelection}
+                            </div>                            
                         </div>
                         <MapContainer stations={this.stationData}/> 
                     </div>
@@ -138,19 +176,17 @@ class App extends React.Component {
                             <DropdownButton title="Add Property" id="add-property-dropdown">
                                 {propertyOptions}
                             </DropdownButton>  
-                            <Button onClick={() => props.clearProperties()}>Clear all Properties</Button>                                
+                            <Button onClick={() => props.clearProperties()}>Clear All Properties</Button>                                
                         </ButtonGroup>
                 
                 
-                        <ChartListContainer meta={this.waterDataMeta} data={this.waterData}/>
+                        <ChartListContainer meta={this.waterDataMeta} data={this.cleanData(this.waterData, props.fromDate, props.tillDate)}/>
                     </div>
                 </div>
             </div>
         );
     }
 }
-//onClick={props.clearProperties()}
-
 
 App.propTypes = {
   loaded: PropTypes.object.isRequired,
@@ -161,7 +197,12 @@ App.propTypes = {
   onStationDataLoaded: PropTypes.func.isRequired,
   onDataLoaded: PropTypes.func.isRequired,
   toggleProperty: PropTypes.func.isRequired,
-  clearProperties: PropTypes.func.isRequired
+  clearProperties: PropTypes.func.isRequired,
+  setTimeRange: PropTypes.func.isRequired,
+  setDepthRange: PropTypes.func.isRequired,
+  group: PropTypes.number.isRequired,
+  changeSelectionGroup: PropTypes.func.isRequired,
+  clearStationSelection: PropTypes.func.isRequired,
 }
 
 

@@ -16,7 +16,6 @@ class ChartList extends React.Component {
         const dts = typeof this.props.dataToShow !== 'undefined' ? this.props.dataToShow : [];
 
         const charts = dts.map((property, key) => {
-            console.log(property)
             return (
                 <ChartContainer key={key} property={property} data={this.props.data} />
             );

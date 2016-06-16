@@ -5,7 +5,8 @@ import Map from '../Map'
 
 const mapStateToProps = (state) => {
   return {
-      selected: state.StationFilter.selected
+      selectedG0: state.StationFilter.selectedG0,
+      selectedG1: state.StationFilter.selectedG1
   }
 }
 

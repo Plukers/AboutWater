@@ -27,20 +27,34 @@ class Map extends React.Component {
             popupAnchor:  [0, -29] // point from which the popup should open relative to the iconAnchor
         });
 
-        this.greyIcon = L.icon({
-            iconUrl: '../../../images/marker_grey.png',
+        console.log(this.greenIcon.options.iconSize);
 
-            iconSize:     [20, 29], // size of the icon
-            iconAnchor:   [10, 29], // point of the icon which will correspond to marker's location
-            popupAnchor:  [0, -29] // point from which the popup should open relative to the iconAnchor
+        this.greenIcon.options.iconSize = [21, 30];
+
+        console.log(this.greenIcon.options.iconSize);
+
+        this.defaultIcon = L.icon({
+            iconUrl: '../../../images/defaultStation.png',
+
+            iconSize:     [30, 30], // size of the icon
+            iconAnchor:   [15, 15], // point of the icon which will correspond to marker's location
+            popupAnchor:  [0, -15] // point from which the popup should open relative to the iconAnchor
         });
 
-        this.brightIcon = L.icon({
-            iconUrl: '../../../images/marker_bright.png',
+        this.redIcon = L.icon({
+            iconUrl: '../../../images/stationRed.png',
 
-            iconSize:     [20, 29], // size of the icon
-            iconAnchor:   [10, 29], // point of the icon which will correspond to marker's location
-            popupAnchor:  [0, -29] // point from which the popup should open relative to the iconAnchor
+            iconSize:     [30, 30], // size of the icon
+            iconAnchor:   [15, 15], // point of the icon which will correspond to marker's location
+            popupAnchor:  [0, -15] // point from which the popup should open relative to the iconAnchor
+        });
+
+         this.yellowIcon = L.icon({
+            iconUrl: '../../../images/stationYellow.png',
+
+            iconSize:     [30, 30], // size of the icon
+            iconAnchor:   [15, 15], // point of the icon which will correspond to marker's location
+            popupAnchor:  [0, -15] // point from which the popup should open relative to the iconAnchor
         });
 
 
@@ -59,7 +73,7 @@ class Map extends React.Component {
 
         const stationData = typeof this.props.stations !== 'undefined' ? this.props.stations : [];
 
-        const selectionExisting = 0 !== this.props.selected.size;
+        const selectionExisting =  (0 !== this.props.selectedG0.size) || (0 !== this.props.selectedG1.size);
         
         if(typeof this.markers !== 'undefined') {
             this.markers.clearLayers();
@@ -67,14 +81,14 @@ class Map extends React.Component {
 
         stationData.map((s) => {
 
-            let icon = this.greenIcon;
+            let icon = this.defaultIcon;
 
             if(selectionExisting) {
-                if(this.props.selected.has(parseInt(s[0]))) {
-                    icon = this.brightIcon;
-                } else {
-                    icon = this.greyIcon;
-                }                
+                if(this.props.selectedG0.has(parseInt(s[0]))) {
+                    icon = this.redIcon;
+                } else if(this.props.selectedG1.has(parseInt(s[0]))) {
+                    icon = this.yellowIcon;
+                }               
             } 
 
             const m = L.marker(new L.LatLng(parseFloat(s[3]), parseFloat(s[4])), {icon: icon}).addTo(this.map)
@@ -109,7 +123,8 @@ class Map extends React.Component {
 Map.propTypes = {
   onToggleStation: PropTypes.func.isRequired,
   onDeselectAll: PropTypes.func.isRequired,
-  selected: ImmutablePropTypes.set 
+  selectedG0: ImmutablePropTypes.set,
+  selectedG1: ImmutablePropTypes.set
 }
 
 export default Map;

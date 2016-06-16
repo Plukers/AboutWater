@@ -7,10 +7,25 @@
 .x.axis path {
   display: none; }
 
-.line {
+.line-blue {
   fill: none;
-  stroke: #395d6a;
-  stroke-width: 1.5px; }
+  stroke-width: 1.5px;
+  stroke: #465358; }
+
+.line-blue-bright {
+  fill: none;
+  stroke-width: 1.2px;
+  stroke: #C3E7F5; }
+
+.line-red {
+  fill: none;
+  stroke-width: 2px;
+  stroke: #8F3225; }
+
+.line-yellow {
+  fill: none;
+  stroke-width: 2px;
+  stroke: #8F811D; }
 
 @media (min-width: 768px) {
   #chartList {

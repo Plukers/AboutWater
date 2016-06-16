@@ -25,8 +25,11 @@
     "gulp-uglify": "^1.5.3",
     "jquery": "^3.0.0",
     "leaflet": "^0.7.7",
+    "loose-envify": "^1.2.0",
     "papaparse": "^4.1.2",
     "react": "^15.1.0",
+    "react-bootstrap": "^0.29.4",
+    "react-d3-basic": "^1.6.11",
     "react-dom": "^15.1.0",
     "react-faux-dom": "^2.5.0",
     "react-immutable-proptypes": "^1.7.1",
@@ -37,8 +40,6 @@
     "redux-logger": "^2.6.1",
     "run-sequence": "^1.2.1",
     "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0",
-    "react-bootstrap": "^0.29.4",
-    "react-d3-basic": "^1.6.11"
+    "vinyl-source-stream": "^1.1.0"
   }
 }

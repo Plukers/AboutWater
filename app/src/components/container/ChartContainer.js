@@ -5,8 +5,12 @@ import Chart from '../Chart'
 
 const mapStateToProps = (state) => {
   return {
+      fromDepth: state.DepthFilter.get('from'),
+      tillDepth: state.DepthFilter.get('till'),
       fromTime: state.TimeFilter.get('from'),
-      tillTime: state.TimeFilter.get('till')
+      tillTime: state.TimeFilter.get('till'),
+      selectedG0: state.StationFilter.selectedG0,
+      selectedG1: state.StationFilter.selectedG1
   }
 }
 

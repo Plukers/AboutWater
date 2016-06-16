@@ -1,7 +1,7 @@
 import Immutable from 'immutable'
 import deepFreeze from 'deep-freeze'
 
-import { TIME_FROM, TIME_TILL } from '../actions/ActionTypes';
+import { TIME_FROM, TIME_TILL, TIME_RANGE } from '../actions/ActionTypes';
 
 const TimeFilter = (state  = Immutable.Map({'from': new Date("1967-04-10 16:15:00"), 'till': new Date("2015-02-24 12:15:00")}), action) => {
 
@@ -14,6 +14,10 @@ const TimeFilter = (state  = Immutable.Map({'from': new Date("1967-04-10 16:15:0
 
         case TIME_TILL:
             return state.set('till', action.date);
+
+        case TIME_RANGE:
+            const tmpState = state.set('from', action.dateFrom);
+            return tmpState.set('till', action.dateTill)
 
         default:
             return state;
