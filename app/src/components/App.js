@@ -46,6 +46,17 @@ class App extends React.Component {
         });
     }
 
+    dateToString(date) {
+
+        let monthString = date.getMonth() + 1;
+
+        if(monthString < 10) {
+            monthString = "0" + monthString;
+        }
+
+        return "" + date.getFullYear() + "-" + monthString + "-" + date.getDate();
+    }
+
     render() {
         const { store } = this.context;
         const props = this.props;
@@ -60,13 +71,13 @@ class App extends React.Component {
                 <FormGroup controlId="formInlineDateStart">
                     <ControlLabel>Time from </ControlLabel>
                     {' '}
-                    <FormControl type="date" defaultValue="1967-04-10" placeholder="1967-04-10" />
+                    <FormControl type="date" defaultValue={this.dateToString(props.fromDate)}/>
                     </FormGroup>
                     {' '}
                     <FormGroup controlId="formInlineDateEnd">
                     <ControlLabel> till </ControlLabel>
                     {' '}
-                    <FormControl type="date"  defaultValue="2015-02-24" placeholder="2015-02-24" />
+                    <FormControl type="date"  defaultValue={this.dateToString(props.tillDate)} />
                     </FormGroup>
                 {' '}
                 <Button onClick={onDateChange}>
@@ -142,8 +153,11 @@ class App extends React.Component {
 
 
 App.propTypes = {
+  loaded: PropTypes.object.isRequired,
   fromDepth: PropTypes.number.isRequired,
   tillDepth: PropTypes.number.isRequired,
+  fromDate: PropTypes.object.isRequired,
+  tillDate: PropTypes.object.isRequired,
   onStationDataLoaded: PropTypes.func.isRequired,
   onDataLoaded: PropTypes.func.isRequired,
   toggleProperty: PropTypes.func.isRequired,

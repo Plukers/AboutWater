@@ -16,7 +16,7 @@ const Data = (state  = {loaded: false, stationsLoaded: false}, action) => {
 
         case STATIONS_LOADED:
             return Object.assign({}, state, {
-                stationsLoaded: !stationsLoaded.loaded
+                stationsLoaded: !state.stationsLoaded
             });
 
         default:

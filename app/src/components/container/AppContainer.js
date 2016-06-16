@@ -9,7 +9,9 @@ const mapStateToProps = (state) => {
       stateProps: {},
       loaded: state.Data,
       fromDepth: state.DepthFilter.get('from'),
-      tillDepth: state.DepthFilter.get('till')
+      tillDepth: state.DepthFilter.get('till'),
+      fromDate: state.TimeFilter.get('from'),
+      tillDate: state.TimeFilter.get('till')
   }
 }
 

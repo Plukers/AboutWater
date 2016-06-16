@@ -62,12 +62,19 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.dataLoaded = dataLoaded;
+exports.stationsLoaded = stationsLoaded;
 
 var _ActionTypes = require('./ActionTypes');
 
 function dataLoaded() {
   return {
     type: _ActionTypes.DATA_LOADED
+  };
+}
+
+function stationsLoaded() {
+  return {
+    type: _ActionTypes.STATIONS_LOADED
   };
 }
 },{"./ActionTypes":2}],4:[function(require,module,exports){
@@ -206,6 +213,18 @@ var App = function (_React$Component) {
             });
         }
     }, {
+        key: 'dateToString',
+        value: function dateToString(date) {
+
+            var monthString = date.getMonth() + 1;
+
+            if (monthString < 10) {
+                monthString = "0" + monthString;
+            }
+
+            return "" + date.getFullYear() + "-" + monthString + "-" + date.getDate();
+        }
+    }, {
         key: 'render',
         value: function render() {
             var store = this.context.store;
@@ -229,7 +248,7 @@ var App = function (_React$Component) {
                         'Time from '
                     ),
                     ' ',
-                    _react2.default.createElement(_reactBootstrap.FormControl, { type: 'date', defaultValue: '1967-04-10', placeholder: '1967-04-10' })
+                    _react2.default.createElement(_reactBootstrap.FormControl, { type: 'date', defaultValue: this.dateToString(props.fromDate) })
                 ),
                 ' ',
                 _react2.default.createElement(
@@ -241,7 +260,7 @@ var App = function (_React$Component) {
                         ' till '
                     ),
                     ' ',
-                    _react2.default.createElement(_reactBootstrap.FormControl, { type: 'date', defaultValue: '2015-02-24', placeholder: '2015-02-24' })
+                    _react2.default.createElement(_reactBootstrap.FormControl, { type: 'date', defaultValue: this.dateToString(props.tillDate) })
                 ),
                 ' ',
                 _react2.default.createElement(
@@ -357,8 +376,11 @@ var App = function (_React$Component) {
 //onClick={props.clearProperties()}
 
 App.propTypes = {
+    loaded: _react.PropTypes.object.isRequired,
     fromDepth: _react.PropTypes.number.isRequired,
     tillDepth: _react.PropTypes.number.isRequired,
+    fromDate: _react.PropTypes.object.isRequired,
+    tillDate: _react.PropTypes.object.isRequired,
     onStationDataLoaded: _react.PropTypes.func.isRequired,
     onDataLoaded: _react.PropTypes.func.isRequired,
     toggleProperty: _react.PropTypes.func.isRequired,
@@ -713,7 +735,6 @@ var Map = function (_React$Component) {
             var selectionExisting = 0 !== this.props.selected.size;
 
             if (typeof this.markers !== 'undefined') {
-                console.log(this.markers);
                 this.markers.clearLayers();
             }
 
@@ -787,7 +808,9 @@ var mapStateToProps = function mapStateToProps(state) {
     stateProps: {},
     loaded: state.Data,
     fromDepth: state.DepthFilter.get('from'),
-    tillDepth: state.DepthFilter.get('till')
+    tillDepth: state.DepthFilter.get('till'),
+    fromDate: state.TimeFilter.get('from'),
+    tillDate: state.TimeFilter.get('till')
   };
 };
 
@@ -954,7 +977,7 @@ var Data = function Data() {
 
         case _ActionTypes.STATIONS_LOADED:
             return Object.assign({}, state, {
-                stationsLoaded: !stationsLoaded.loaded
+                stationsLoaded: !state.stationsLoaded
             });
 
         default:
@@ -1160,8 +1183,6 @@ var _deepFreeze2 = _interopRequireDefault(_deepFreeze);
 var _ActionTypes = require('../actions/ActionTypes');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//{'from': new Date("1967-04-10 16:15:00"), 'till': new Date("2015-02-24 12:15:00")}
 
 var TimeFilter = function TimeFilter() {
     var state = arguments.length <= 0 || arguments[0] === undefined ? _immutable2.default.Map({ 'from': new Date("1967-04-10 16:15:00"), 'till': new Date("2015-02-24 12:15:00") }) : arguments[0];

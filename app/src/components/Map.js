@@ -62,7 +62,6 @@ class Map extends React.Component {
         const selectionExisting = 0 !== this.props.selected.size;
         
         if(typeof this.markers !== 'undefined') {
-            console.log(this.markers);
             this.markers.clearLayers();
         }
 
