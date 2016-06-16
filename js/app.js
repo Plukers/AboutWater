@@ -202,6 +202,7 @@ var App = function (_React$Component) {
 
                     _this2.waterData.forEach(function (e, key) {
                         e[0] = new Date(e[0]);
+                        e[0].setHours(0, 0, 0, 0);
                         for (var i = 1; i < 26; i++) {
                             e[i] = Number(e[i]);
                         }
@@ -218,6 +219,84 @@ var App = function (_React$Component) {
 
             var props = this.props;
 
+            var onDateChange = function onDateChange() {
+                console.log(document.getElementById('formInlineDateStart').value);
+                console.log(document.getElementById('formInlineDateEnd').value);
+            };
+
+            var formInstanceDate = _react2.default.createElement(
+                _reactBootstrap.Form,
+                { inline: true },
+                _react2.default.createElement(
+                    _reactBootstrap.FormGroup,
+                    { controlId: 'formInlineDateStart' },
+                    _react2.default.createElement(
+                        _reactBootstrap.ControlLabel,
+                        null,
+                        'Time from '
+                    ),
+                    ' ',
+                    _react2.default.createElement(_reactBootstrap.FormControl, { type: 'date', defaultValue: '1967-04-10', placeholder: '1967-04-10' })
+                ),
+                ' ',
+                _react2.default.createElement(
+                    _reactBootstrap.FormGroup,
+                    { controlId: 'formInlineDateEnd' },
+                    _react2.default.createElement(
+                        _reactBootstrap.ControlLabel,
+                        null,
+                        ' till '
+                    ),
+                    ' ',
+                    _react2.default.createElement(_reactBootstrap.FormControl, { type: 'date', defaultValue: '2015-02-24', placeholder: '2015-02-24' })
+                ),
+                ' ',
+                _react2.default.createElement(
+                    _reactBootstrap.Button,
+                    { onClick: onDateChange },
+                    'Set Time Range'
+                )
+            );
+
+            var onDepthChange = function onDepthChange() {
+                console.log(document.getElementById('formInlineDepthStart').value);
+                console.log(document.getElementById('formInlineDepthEnd').value);
+            };
+
+            var formInstanceDepth = _react2.default.createElement(
+                _reactBootstrap.Form,
+                { inline: true },
+                _react2.default.createElement(
+                    _reactBootstrap.FormGroup,
+                    { controlId: 'formInlineDepthStart' },
+                    _react2.default.createElement(
+                        _reactBootstrap.ControlLabel,
+                        null,
+                        'Depth from '
+                    ),
+                    ' ',
+                    _react2.default.createElement(_reactBootstrap.FormControl, { type: 'number', defaultValue: '0', placeholder: '0' })
+                ),
+                ' ',
+                _react2.default.createElement(
+                    _reactBootstrap.FormGroup,
+                    { controlId: 'formInlineDepthEnd' },
+                    _react2.default.createElement(
+                        _reactBootstrap.ControlLabel,
+                        null,
+                        ' to '
+                    ),
+                    ' ',
+                    _react2.default.createElement(_reactBootstrap.FormControl, { type: 'number', defaultValue: '40', placeholder: '40' })
+                ),
+                ' ',
+                _react2.default.createElement(
+                    _reactBootstrap.Button,
+                    { onClick: onDepthChange },
+                    'Set Depth Range'
+                )
+            );
+
             var propertyOptions = this.waterDataMeta.map(function (property, key) {
                 return _react2.default.createElement(
                     _reactBootstrap.MenuItem,
@@ -228,58 +307,49 @@ var App = function (_React$Component) {
                 );
             });
 
-            var navbarInstance = _react2.default.createElement(
-                _reactBootstrap.Navbar,
-                null,
-                _react2.default.createElement(
-                    _reactBootstrap.Navbar.Header,
-                    null,
-                    _react2.default.createElement(
-                        _reactBootstrap.Navbar.Brand,
-                        null,
-                        _react2.default.createElement(
-                            'a',
-                            { href: '#' },
-                            'About Water'
-                        )
-                    )
-                ),
-                _react2.default.createElement(
-                    _reactBootstrap.Nav,
-                    null,
-                    _react2.default.createElement(
-                        _reactBootstrap.NavItem,
-                        { eventKey: 1, href: '#' },
-                        'Link'
-                    ),
-                    _react2.default.createElement(
-                        _reactBootstrap.NavItem,
-                        { eventKey: 2, href: '#' },
-                        'Link'
-                    ),
-                    _react2.default.createElement(
-                        _reactBootstrap.NavDropdown,
-                        { eventKey: 3, title: 'Add Property', id: 'basic-nav-dropdown' },
-                        propertyOptions
-                    )
-                )
-            );
-
             return _react2.default.createElement(
                 'div',
                 { className: 'container-fluid' },
-                navbarInstance,
                 _react2.default.createElement(
                     'div',
-                    { className: '.row-fluid' },
+                    { className: 'row-fluid' },
                     _react2.default.createElement(
                         'div',
                         { className: 'col-md-6' },
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'row input' },
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'col-md-12' },
+                                formInstanceDate
+                            ),
+                            _react2.default.createElement('hr', null),
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'col-md-12' },
+                                formInstanceDepth
+                            )
+                        ),
                         _react2.default.createElement(_MapContainer2.default, { stations: this.stationData })
                     ),
                     _react2.default.createElement(
                         'div',
                         { className: 'col-md-6' },
+                        _react2.default.createElement(
+                            _reactBootstrap.ButtonGroup,
+                            null,
+                            _react2.default.createElement(
+                                _reactBootstrap.DropdownButton,
+                                { title: 'Add Property', id: 'add-property-dropdown' },
+                                propertyOptions
+                            ),
+                            _react2.default.createElement(
+                                _reactBootstrap.Button,
+                                null,
+                                'Clear all Properties'
+                            )
+                        ),
                         _react2.default.createElement(_ChartListContainer2.default, { meta: this.waterDataMeta, data: this.waterData })
                     )
                 )
@@ -289,6 +359,7 @@ var App = function (_React$Component) {
 
     return App;
 }(_react2.default.Component);
+//onClick={props.clearProperties()}
 
 App.propTypes = {
     stateProps: _react.PropTypes.object.isRequired,
@@ -327,6 +398,8 @@ var _d = require('d3');
 
 var _d2 = _interopRequireDefault(_d);
 
+var _reactBootstrap = require('react-bootstrap');
+
 var _PropToColumn = require('../util/PropToColumn');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -352,24 +425,33 @@ var Chart = function (_React$Component) {
             var props = this.props;
 
             var column = (0, _PropToColumn.propToColumn)(props.property);
-            var chartData = [];
+            var chartDataMap = _immutable2.default.OrderedMap();
             props.data.forEach(function (e, k) {
                 if (e[0] > props.fromTime && e[0] < props.tillTime && !isNaN(e[column])) {
-                    chartData.push({ date: e[0], value: e[column] });
+                    if (chartDataMap.has(e[0])) {
+                        chartDataMap = chartDataMap.set(e[0], (chartDataMap.get(e[0]) + e[column]) / 2);
+                    } else {
+                        chartDataMap = chartDataMap.set(e[0], e[column]);
+                    }
                 }
+            });
+
+            var chartData = [];
+            chartDataMap.forEach(function (v, k) {
+                chartData.push({ date: k, value: v });
             });
 
             console.log(chartData);
 
             var margin = { top: 20, right: 20, bottom: 30, left: 50 };
-            var width = 750 - margin.left - margin.right;
-            var height = 300 - margin.top - margin.bottom;
+            var width = 870 - margin.left - margin.right;
+            var height = 200 - margin.top - margin.bottom;
 
             var x = _d2.default.time.scale().range([0, width]);
 
             var y = _d2.default.scale.linear().range([height, 0]);
 
-            var xAxis = _d2.default.svg.axis().scale(x).orient("bottom").ticks(5);
+            var xAxis = _d2.default.svg.axis().scale(x).orient("bottom").ticks(7);
 
             var yAxis = _d2.default.svg.axis().scale(y).orient("left");
 
@@ -397,13 +479,42 @@ var Chart = function (_React$Component) {
 
             return _react2.default.createElement(
                 'div',
-                null,
+                { className: 'chart' },
                 _react2.default.createElement(
-                    'h3',
-                    null,
-                    props.property
+                    'div',
+                    { className: 'row chartTitle' },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'col-md-11' },
+                        _react2.default.createElement(
+                            'p',
+                            { className: 'text-right' },
+                            _react2.default.createElement(
+                                'h5',
+                                null,
+                                props.property
+                            )
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'col-md-1' },
+                        _react2.default.createElement(
+                            _reactBootstrap.Button,
+                            { onClick: function onClick() {
+                                    return props.toggleProperty(props.property);
+                                } },
+                            _react2.default.createElement('span', { 'class': 'glyphicon glyphicon-star' }),
+                            'close'
+                        )
+                    )
                 ),
-                chart.toReact()
+                _react2.default.createElement(
+                    'div',
+                    null,
+                    chart.toReact()
+                ),
+                _react2.default.createElement('hr', null)
             );
         }
     }]);
@@ -411,14 +522,18 @@ var Chart = function (_React$Component) {
     return Chart;
 }(_react2.default.Component);
 
+/*
+
+*/
+
 Chart.propTypes = {
-    dispatchProp: _react.PropTypes.object.isRequired,
     fromTime: _react.PropTypes.object.isRequired,
-    tillTime: _react.PropTypes.object.isRequired
+    tillTime: _react.PropTypes.object.isRequired,
+    toggleProperty: _react.PropTypes.func.isRequired
 };
 
 exports.default = Chart;
-},{"../util/PropToColumn":20,"d3":22,"immutable":80,"react":481,"react-faux-dom":302,"react-immutable-proptypes":312}],8:[function(require,module,exports){
+},{"../util/PropToColumn":20,"d3":22,"immutable":80,"react":481,"react-bootstrap":255,"react-faux-dom":302,"react-immutable-proptypes":312}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -482,7 +597,7 @@ var ChartList = function (_React$Component) {
 
             return _react2.default.createElement(
                 'div',
-                null,
+                { id: 'chartList' },
                 charts
             );
         }
@@ -549,10 +664,10 @@ var Map = function (_React$Component) {
 
             var ACCESS_TOKEN = 'pk.eyJ1IjoibHVwcm8iLCJhIjoiY2lwOGgxZmdoMDAxMHMxbm1lZGZ2ZjRtcCJ9.JfrfhSQ4miqXJlB7Vi6JtA';
             var MB_ATTR = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' + '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' + 'Imagery © <a href="http://mapbox.com">Mapbox</a>';
-            var MB_URL = 'https://api.mapbox.com/styles/v1/{id}/cip8h2g48002qdmm2u4zxmoco/tiles/{z}/{x}/{y}?access_token=' + ACCESS_TOKEN;
+            var MB_URL = 'https://api.mapbox.com/styles/v1/{id}/cip8h2g48002qdmm2u4zxmoco/tiles/256/{z}/{x}/{y}?access_token=' + ACCESS_TOKEN;
             var OSM_URL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
             var OSM_ATTRIB = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-            this.map = _leaflet2.default.map('map').setView([37.816508, -121.914375], 9);
+            this.map = _leaflet2.default.map('map').setView([37.74997, -121.952572], 10);
 
             _leaflet2.default.tileLayer(MB_URL, { attribution: MB_ATTR, id: 'lupro' }).addTo(this.map);
 
@@ -704,6 +819,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var _reactRedux = require('react-redux');
 
+var _PropertyFilterActions = require('../../actions/PropertyFilterActions');
+
 var _Chart = require('../Chart');
 
 var _Chart2 = _interopRequireDefault(_Chart);
@@ -719,14 +836,17 @@ var mapStateToProps = function mapStateToProps(state) {
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
-    dispatchProp: {}
+    toggleProperty: function toggleProperty(property) {
+      console.log(property);
+      dispatch((0, _PropertyFilterActions.toggleProperty)(property));
+    }
   };
 };
 
 var ChartContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_Chart2.default);
 
 exports.default = ChartContainer;
-},{"../Chart":7,"react-redux":339}],12:[function(require,module,exports){
+},{"../../actions/PropertyFilterActions":4,"../Chart":7,"react-redux":339}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -857,7 +977,7 @@ var _ActionTypes = require('../actions/ActionTypes');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var DepthFilter = function DepthFilter() {
-    var state = arguments.length <= 0 || arguments[0] === undefined ? _immutable2.default.Map({ from: 0, till: 3000 }) : arguments[0];
+    var state = arguments.length <= 0 || arguments[0] === undefined ? _immutable2.default.Map({ from: 0, till: 40 }) : arguments[0];
     var action = arguments[1];
 
 
@@ -1038,7 +1158,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //{'from': new Date("1967-04-10 16:15:00"), 'till': new Date("2015-02-24 12:15:00")}
 
 var TimeFilter = function TimeFilter() {
-    var state = arguments.length <= 0 || arguments[0] === undefined ? _immutable2.default.Map({ 'from': new Date("2011-04-10 16:15:00"), 'till': new Date("2012-04-15 12:15:00") }) : arguments[0];
+    var state = arguments.length <= 0 || arguments[0] === undefined ? _immutable2.default.Map({ 'from': new Date("1967-04-10 16:15:00"), 'till': new Date("2015-02-24 12:15:00") }) : arguments[0];
     var action = arguments[1];
 
 

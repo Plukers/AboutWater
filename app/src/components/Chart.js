@@ -3,6 +3,7 @@ import Immutable from 'immutable'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import ReactFauxDOM from 'react-faux-dom'
 import d3 from 'd3'
+import { Button } from 'react-bootstrap'
 
 import { propToColumn } from '../util/PropToColumn'
 
@@ -12,18 +13,28 @@ class Chart extends React.Component {
         const props = this.props;
 
         const column = propToColumn(props.property);
-        let chartData = [];
+        let chartDataMap = Immutable.OrderedMap();
         props.data.forEach((e, k) => {
             if(e[0] > props.fromTime && e[0] < props.tillTime && !isNaN(e[column])) {
-                        chartData.push({date: e[0], value: e[column]});
+                        if(chartDataMap.has(e[0])) {
+                            chartDataMap = chartDataMap.set(e[0], (chartDataMap.get(e[0]) + e[column]) / 2);
+                        } else {
+                            chartDataMap = chartDataMap.set(e[0], e[column]);
+                        }
                     }
+        });
+
+
+        const chartData = [];
+        chartDataMap.forEach((v, k) => {
+            chartData.push({date: k, value: v});
         });
         
         console.log(chartData);
 
         const margin = {top: 20, right: 20, bottom: 30, left: 50};
-        const width = 750 - margin.left - margin.right;
-        const height = 300 - margin.top - margin.bottom;
+        const width = 870 - margin.left - margin.right;
+        const height = 200 - margin.top - margin.bottom;
 
         const x = d3.time.scale()
             .range([0, width]);
@@ -35,7 +46,7 @@ class Chart extends React.Component {
         const xAxis = d3.svg.axis()
             .scale(x)
             .orient("bottom")
-            .ticks(5);
+            .ticks(7);
 
         const yAxis = d3.svg.axis()
             .scale(y)
@@ -77,18 +88,32 @@ class Chart extends React.Component {
 
         
         return (
-            <div>
-                <h3>{props.property}</h3>
-                {chart.toReact()}
+            <div className='chart'>
+                <div className='row chartTitle'>
+                    <div className='col-md-11'>
+                        <p className='text-right'><h5>{props.property}</h5></p>
+                    </div>
+                    <div className='col-md-1'>                        
+                        <Button onClick={() => props.toggleProperty(props.property)}><span class="glyphicon glyphicon-star" />close</Button>
+                    </div>
+                </div>
+                <div>
+                    {chart.toReact()}
+                </div>
+                <hr />
             </div>
         )
     }
 }
 
+/*
+
+*/
+
 Chart.propTypes = {
-  dispatchProp: PropTypes.object.isRequired,
   fromTime: PropTypes.object.isRequired,
-  tillTime: PropTypes.object.isRequired
+  tillTime: PropTypes.object.isRequired,
+  toggleProperty: PropTypes.func.isRequired
 }
 
 export default Chart

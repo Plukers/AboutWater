@@ -1,5 +1,6 @@
 import { connect } from 'react-redux'
 
+import { toggleProperty } from '../../actions/PropertyFilterActions'
 import Chart from '../Chart'
 
 const mapStateToProps = (state) => {
@@ -11,7 +12,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    dispatchProp: {}
+    toggleProperty: (property) => {
+      console.log(property);
+      dispatch( toggleProperty(property) )
+    }
   }
 }
 

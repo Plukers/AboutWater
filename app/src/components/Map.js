@@ -12,10 +12,10 @@ class Map extends React.Component {
 		const MB_ATTR = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
 			'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
 			'Imagery © <a href="http://mapbox.com">Mapbox</a>';
-		const MB_URL = 'https://api.mapbox.com/styles/v1/{id}/cip8h2g48002qdmm2u4zxmoco/tiles/{z}/{x}/{y}?access_token=' + ACCESS_TOKEN;
+		const MB_URL = 'https://api.mapbox.com/styles/v1/{id}/cip8h2g48002qdmm2u4zxmoco/tiles/256/{z}/{x}/{y}?access_token=' + ACCESS_TOKEN;
 		const OSM_URL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 		const OSM_ATTRIB = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-        this.map = L.map('map').setView([37.816508, -121.914375], 9);
+        this.map = L.map('map').setView([37.74997, -121.952572], 10);
 
         L.tileLayer(MB_URL, {attribution: MB_ATTR, id: 'lupro'}).addTo(this.map);
 

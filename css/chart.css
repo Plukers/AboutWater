@@ -1,7 +1,7 @@
 .axis path,
 .axis line {
   fill: none;
-  stroke: #000;
+  stroke: #8c8c8c;
   shape-rendering: crispEdges; }
 
 .x.axis path {
@@ -9,5 +9,18 @@
 
 .line {
   fill: none;
-  stroke: steelblue;
+  stroke: #395d6a;
   stroke-width: 1.5px; }
+
+@media (min-width: 768px) {
+  #chartList {
+    position: absolute;
+    margin-top: 5%;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    overflow-y: scroll;
+    height: 84vh;
+    width: 100%; }
+  .chart {
+    width: 90%; } }

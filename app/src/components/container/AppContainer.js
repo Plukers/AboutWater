@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { stationsLoaded } from '../../actions/StationFilterActions'
 import { dataLoaded } from '../../actions/DataActions'
-import { toggleProperty } from '../../actions/PropertyFilterActions'
+import { toggleProperty, deselectAllProperties } from '../../actions/PropertyFilterActions'
 
 import App from '../App'
 
@@ -20,7 +20,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(dataLoaded())
     },
     toggleProperty: (property) => {
-     dispatch( toggleProperty(property.property) )
+      dispatch( toggleProperty(property.property) )
     }
   }
 }

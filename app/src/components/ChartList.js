@@ -23,7 +23,7 @@ class ChartList extends React.Component {
         });
 
         return (
-            <div>
+            <div id="chartList">
                 {charts}
             </div>
         );
