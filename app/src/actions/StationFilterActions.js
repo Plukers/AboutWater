@@ -1,7 +1,6 @@
 import { 
          TOGGLE_STATION_SELECTION, 
-         DESELECT_ALL_STATIONS, 
-         STATIONS_LOADED 
+         DESELECT_ALL_STATIONS
         } from './ActionTypes'
 
 export function toggleStationSelection(id) {
@@ -14,11 +13,5 @@ export function toggleStationSelection(id) {
 export function deselectAllStations() {
   return {
     type: DESELECT_ALL_STATIONS
-  }
-}
-
-export function stationsLoaded() {
-  return {
-    type: STATIONS_LOADED
   }
 }

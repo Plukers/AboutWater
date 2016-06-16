@@ -101,7 +101,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.toggleStationSelection = toggleStationSelection;
 exports.deselectAllStations = deselectAllStations;
-exports.stationsLoaded = stationsLoaded;
 
 var _ActionTypes = require('./ActionTypes');
 
@@ -115,12 +114,6 @@ function toggleStationSelection(id) {
 function deselectAllStations() {
   return {
     type: _ActionTypes.DESELECT_ALL_STATIONS
-  };
-}
-
-function stationsLoaded() {
-  return {
-    type: _ActionTypes.STATIONS_LOADED
   };
 }
 },{"./ActionTypes":2}],6:[function(require,module,exports){
@@ -364,7 +357,6 @@ var App = function (_React$Component) {
 //onClick={props.clearProperties()}
 
 App.propTypes = {
-    stateProps: _react.PropTypes.object.isRequired,
     fromDepth: _react.PropTypes.number.isRequired,
     tillDepth: _react.PropTypes.number.isRequired,
     onStationDataLoaded: _react.PropTypes.func.isRequired,
@@ -780,8 +772,6 @@ Object.defineProperty(exports, "__esModule", {
 
 var _reactRedux = require('react-redux');
 
-var _StationFilterActions = require('../../actions/StationFilterActions');
-
 var _DataActions = require('../../actions/DataActions');
 
 var _PropertyFilterActions = require('../../actions/PropertyFilterActions');
@@ -795,6 +785,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var mapStateToProps = function mapStateToProps(state) {
   return {
     stateProps: {},
+    loaded: state.Data,
     fromDepth: state.DepthFilter.get('from'),
     tillDepth: state.DepthFilter.get('till')
   };
@@ -803,7 +794,7 @@ var mapStateToProps = function mapStateToProps(state) {
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
     onStationDataLoaded: function onStationDataLoaded() {
-      dispatch((0, _StationFilterActions.stationsLoaded)());
+      dispatch((0, _DataActions.stationsLoaded)());
     },
     onDataLoaded: function onDataLoaded() {
       dispatch((0, _DataActions.dataLoaded)());
@@ -820,7 +811,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 var AppContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_App2.default);
 
 exports.default = AppContainer;
-},{"../../actions/DataActions":3,"../../actions/PropertyFilterActions":4,"../../actions/StationFilterActions":5,"../App":6,"react-redux":339}],11:[function(require,module,exports){
+},{"../../actions/DataActions":3,"../../actions/PropertyFilterActions":4,"../App":6,"react-redux":339}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -948,7 +939,7 @@ var _ActionTypes = require('../actions/ActionTypes');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Data = function Data() {
-    var state = arguments.length <= 0 || arguments[0] === undefined ? { loaded: false } : arguments[0];
+    var state = arguments.length <= 0 || arguments[0] === undefined ? { loaded: false, stationsLoaded: false } : arguments[0];
     var action = arguments[1];
 
 
@@ -959,6 +950,11 @@ var Data = function Data() {
         case _ActionTypes.DATA_LOADED:
             return Object.assign({}, state, {
                 loaded: !state.loaded
+            });
+
+        case _ActionTypes.STATIONS_LOADED:
+            return Object.assign({}, state, {
+                stationsLoaded: !stationsLoaded.loaded
             });
 
         default:

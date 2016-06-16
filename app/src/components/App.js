@@ -142,7 +142,6 @@ class App extends React.Component {
 
 
 App.propTypes = {
-  stateProps: PropTypes.object.isRequired,
   fromDepth: PropTypes.number.isRequired,
   tillDepth: PropTypes.number.isRequired,
   onStationDataLoaded: PropTypes.func.isRequired,

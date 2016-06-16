@@ -1,9 +1,9 @@
 import Immutable from 'immutable'
 import deepFreeze from 'deep-freeze'
 
-import { DATA_LOADED } from '../actions/ActionTypes'
+import { DATA_LOADED, STATIONS_LOADED } from '../actions/ActionTypes'
 
-const Data = (state  = {loaded: false}, action) => {
+const Data = (state  = {loaded: false, stationsLoaded: false}, action) => {
 
     deepFreeze(state);   
 
@@ -12,6 +12,11 @@ const Data = (state  = {loaded: false}, action) => {
         case DATA_LOADED:
             return Object.assign({}, state, {
                 loaded: !state.loaded
+            });
+
+        case STATIONS_LOADED:
+            return Object.assign({}, state, {
+                stationsLoaded: !stationsLoaded.loaded
             });
 
         default:
