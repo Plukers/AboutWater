@@ -85,13 +85,13 @@ class App extends React.Component {
                 <FormGroup controlId="formInlineDepthStart">
                     <ControlLabel>Depth from </ControlLabel>
                     {' '}
-                    <FormControl type="number" defaultValue="0" placeholder="0" />
+                    <FormControl type="number" defaultValue={props.fromDepth} />
                 </FormGroup>
                     {' '}
                 <FormGroup controlId="formInlineDepthEnd">
                     <ControlLabel> to </ControlLabel>
                     {' '}
-                    <FormControl type="number"  defaultValue="40" placeholder="40" />
+                    <FormControl type="number"  defaultValue={props.tillDepth} />
                 </FormGroup>
                 {' '}
                 <Button onClick={onDepthChange}>
@@ -143,6 +143,8 @@ class App extends React.Component {
 
 App.propTypes = {
   stateProps: PropTypes.object.isRequired,
+  fromDepth: PropTypes.number.isRequired,
+  tillDepth: PropTypes.number.isRequired,
   onStationDataLoaded: PropTypes.func.isRequired,
   onDataLoaded: PropTypes.func.isRequired,
   toggleProperty: PropTypes.func.isRequired,

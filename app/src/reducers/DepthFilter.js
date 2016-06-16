@@ -3,7 +3,7 @@ import deepFreeze from 'deep-freeze'
 
 import { DEPTH_FROM, DEPTH_TILL } from '../actions/ActionTypes'
 
-const DepthFilter = (state  = Immutable.Map({from:0, till:40}), action) => {
+const DepthFilter = (state  = Immutable.Map({'from':0, 'till':40}), action) => {
 
     deepFreeze(state);   
 

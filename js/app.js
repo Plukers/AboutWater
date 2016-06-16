@@ -275,7 +275,7 @@ var App = function (_React$Component) {
                         'Depth from '
                     ),
                     ' ',
-                    _react2.default.createElement(_reactBootstrap.FormControl, { type: 'number', defaultValue: '0', placeholder: '0' })
+                    _react2.default.createElement(_reactBootstrap.FormControl, { type: 'number', defaultValue: props.fromDepth })
                 ),
                 ' ',
                 _react2.default.createElement(
@@ -287,7 +287,7 @@ var App = function (_React$Component) {
                         ' to '
                     ),
                     ' ',
-                    _react2.default.createElement(_reactBootstrap.FormControl, { type: 'number', defaultValue: '40', placeholder: '40' })
+                    _react2.default.createElement(_reactBootstrap.FormControl, { type: 'number', defaultValue: props.tillDepth })
                 ),
                 ' ',
                 _react2.default.createElement(
@@ -365,6 +365,8 @@ var App = function (_React$Component) {
 
 App.propTypes = {
     stateProps: _react.PropTypes.object.isRequired,
+    fromDepth: _react.PropTypes.number.isRequired,
+    tillDepth: _react.PropTypes.number.isRequired,
     onStationDataLoaded: _react.PropTypes.func.isRequired,
     onDataLoaded: _react.PropTypes.func.isRequired,
     toggleProperty: _react.PropTypes.func.isRequired,
@@ -792,7 +794,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
-    stateProps: {}
+    stateProps: {},
+    fromDepth: state.DepthFilter.get('from'),
+    tillDepth: state.DepthFilter.get('till')
   };
 };
 
@@ -983,7 +987,7 @@ var _ActionTypes = require('../actions/ActionTypes');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var DepthFilter = function DepthFilter() {
-    var state = arguments.length <= 0 || arguments[0] === undefined ? _immutable2.default.Map({ from: 0, till: 40 }) : arguments[0];
+    var state = arguments.length <= 0 || arguments[0] === undefined ? _immutable2.default.Map({ 'from': 0, 'till': 40 }) : arguments[0];
     var action = arguments[1];
 
 

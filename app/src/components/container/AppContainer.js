@@ -7,7 +7,9 @@ import App from '../App'
 
 const mapStateToProps = (state) => {
   return {
-      stateProps: {}
+      stateProps: {},
+      fromDepth: state.DepthFilter.get('from'),
+      tillDepth: state.DepthFilter.get('till')
   }
 }
 
