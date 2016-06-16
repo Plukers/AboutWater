@@ -346,7 +346,9 @@ var App = function (_React$Component) {
                             ),
                             _react2.default.createElement(
                                 _reactBootstrap.Button,
-                                null,
+                                { onClick: function onClick() {
+                                        return props.clearProperties();
+                                    } },
                                 'Clear all Properties'
                             )
                         ),
@@ -365,7 +367,8 @@ App.propTypes = {
     stateProps: _react.PropTypes.object.isRequired,
     onStationDataLoaded: _react.PropTypes.func.isRequired,
     onDataLoaded: _react.PropTypes.func.isRequired,
-    toggleProperty: _react.PropTypes.func.isRequired
+    toggleProperty: _react.PropTypes.func.isRequired,
+    clearProperties: _react.PropTypes.func.isRequired
 };
 
 exports.default = App;
@@ -803,6 +806,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     },
     toggleProperty: function toggleProperty(property) {
       dispatch((0, _PropertyFilterActions.toggleProperty)(property.property));
+    },
+    clearProperties: function clearProperties(property) {
+      dispatch((0, _PropertyFilterActions.deselectAllProperties)());
     }
   };
 };

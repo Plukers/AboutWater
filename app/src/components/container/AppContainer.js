@@ -21,6 +21,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     toggleProperty: (property) => {
       dispatch( toggleProperty(property.property) )
+    },
+    clearProperties: (property) => {
+      dispatch( deselectAllProperties() )
     }
   }
 }

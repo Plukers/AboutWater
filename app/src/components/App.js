@@ -127,7 +127,7 @@ class App extends React.Component {
                             <DropdownButton title="Add Property" id="add-property-dropdown">
                                 {propertyOptions}
                             </DropdownButton>  
-                            <Button >Clear all Properties</Button>                                
+                            <Button onClick={() => props.clearProperties()}>Clear all Properties</Button>                                
                         </ButtonGroup>
                 
                 
@@ -145,7 +145,8 @@ App.propTypes = {
   stateProps: PropTypes.object.isRequired,
   onStationDataLoaded: PropTypes.func.isRequired,
   onDataLoaded: PropTypes.func.isRequired,
-  toggleProperty: PropTypes.func.isRequired
+  toggleProperty: PropTypes.func.isRequired,
+  clearProperties: PropTypes.func.isRequired
 }
 
 
