@@ -102,107 +102,145 @@ class Chart extends React.Component {
         chartDataRegression.n = chartData.length;
         this.calculateRegression(chartDataRegression, chartData);
 
-        if(selectionExisting) {
 
-            const chartDataGNRegression= { 
-                n: 0,
-                sumDate: 0,
-                sumValue: 0,
-                dateTimesValue: 0, 
-                dateSquare: 0, 
-                valueSquare: 0,
-                slope: 0,
-                yIntercept: 0,
-                line: []
-            };
+        const chartDataGNRegression= { 
+            n: 0,
+            sumDate: 0,
+            sumValue: 0,
+            dateTimesValue: 0, 
+            dateSquare: 0, 
+            valueSquare: 0,
+            slope: 0,
+            yIntercept: 0,
+            line: []
+        };
 
-            const chartDataGN = [];
-            chartDataMapGN.forEach((v, k) => {
-                chartDataGN.push({date: k, value: v});
+        const chartDataGN = [];
+        chartDataMapGN.forEach((v, k) => {
+            chartDataGN.push({date: k, value: v});
 
-                const dateTime = k.getTime();
+            const dateTime = k.getTime();
 
-                chartDataGNRegression.sumDate += dateTime;
-                chartDataGNRegression.sumValue += v;
-                chartDataGNRegression.dateTimesValue += dateTime * v;
-                chartDataGNRegression.dateSquare += Math.pow(dateTime, 2); 
-                chartDataGNRegression.valueSquare += Math.pow(v, 2);
-            });
+            chartDataGNRegression.sumDate += dateTime;
+            chartDataGNRegression.sumValue += v;
+            chartDataGNRegression.dateTimesValue += dateTime * v;
+            chartDataGNRegression.dateSquare += Math.pow(dateTime, 2); 
+            chartDataGNRegression.valueSquare += Math.pow(v, 2);
+        });
 
+        if(chartDataGN.length > 0) {
             chartDataGNRegression.n = chartDataGN.length;
 
             this.calculateRegression(chartDataGNRegression , chartDataGN);
+        }
 
-            const chartDataG0Regression= { 
-                n: 0,
-                sumDate: 0,
-                sumValue: 0,
-                dateTimesValue: 0, 
-                dateSquare: 0, 
-                valueSquare: 0,
-                slope: 0,
-                yIntercept: 0,
-                line: []
-            };
-        
-            const chartDataG0 = [];
-            chartDataMapG0.forEach((v, k) => {
-                chartDataG0.push({date: k, value: v});
+        const chartDataG0Regression= { 
+            n: 0,
+            sumDate: 0,
+            sumValue: 0,
+            dateTimesValue: 0, 
+            dateSquare: 0, 
+            valueSquare: 0,
+            slope: 0,
+            yIntercept: 0,
+            line: []
+        };
+    
+        const chartDataG0 = [];
+        chartDataMapG0.forEach((v, k) => {
 
-                const dateTime = k.getTime();
+            let nv = v;
+            if(nv === 0) {
+                nv = 0.0000001
+            }
 
-                chartDataG0Regression.sumDate += dateTime;
-                chartDataG0Regression.sumValue += v;
-                chartDataG0Regression.dateTimesValue += dateTime * v;
-                chartDataG0Regression.dateSquare += Math.pow(dateTime, 2); 
-                chartDataG0Regression.valueSquare += Math.pow(v, 2);
-            });
+            chartDataG0.push({date: k, value: v});
 
+            const dateTime = k.getTime();
+
+            chartDataG0Regression.sumDate += dateTime;
+            chartDataG0Regression.sumValue += v;
+            chartDataG0Regression.dateTimesValue += dateTime * v;
+            chartDataG0Regression.dateSquare += Math.pow(dateTime, 2); 
+            chartDataG0Regression.valueSquare += Math.pow(v, 2);
+        });
+
+        if(chartDataG0.length > 0) {
             chartDataG0Regression.n = chartDataG0.length;
 
             this.calculateRegression(chartDataG0Regression , chartDataG0);
+        }
 
-            const chartDataG1Regression= { 
-                n: 0,
-                sumDate: 0,
-                sumValue: 0,
-                dateTimesValue: 0, 
-                dateSquare: 0, 
-                valueSquare: 0,
-                slope: 0,
-                yIntercept: 0,
-                line: []
-            };
+        const chartDataG1Regression= { 
+            n: 0,
+            sumDate: 0,
+            sumValue: 0,
+            dateTimesValue: 0, 
+            dateSquare: 0, 
+            valueSquare: 0,
+            slope: 0,
+            yIntercept: 0,
+            line: []
+        };
 
-            const chartDataG1 = [];
-            chartDataMapG1.forEach((v, k) => {
-                chartDataG1.push({date: k, value: v});
+        const chartDataG1 = [];
+        chartDataMapG1.forEach((v, k) => {
+            chartDataG1.push({date: k, value: v});
 
-                const dateTime = k.getTime();
+            const dateTime = k.getTime();
 
-                chartDataG1Regression.sumDate += dateTime;
-                chartDataG1Regression.sumValue += v;
-                chartDataG1Regression.dateTimesValue += dateTime * v;
-                chartDataG1Regression.dateSquare += Math.pow(dateTime, 2); 
-                chartDataG1Regression.valueSquare += Math.pow(v, 2);
-            });
+            chartDataG1Regression.sumDate += dateTime;
+            chartDataG1Regression.sumValue += v;
+            chartDataG1Regression.dateTimesValue += dateTime * v;
+            chartDataG1Regression.dateSquare += Math.pow(dateTime, 2); 
+            chartDataG1Regression.valueSquare += Math.pow(v, 2);
+        });
 
+        if(chartDataG1.length > 0) {
             chartDataG1Regression.n = chartDataG1.length;
 
             this.calculateRegression(chartDataG1Regression, chartDataG1);
+        }
 
-            }
 
-            const margin = {top: 20, right: 20, bottom: 30, left: 50};
-            const width = 870 - margin.left - margin.right;
-            const height = 200 - margin.top - margin.bottom;
+        const margin = {top: 20, right: 20, bottom: 30, left: 50};
+        const width = 870 - margin.left - margin.right;
+        const height = 200 - margin.top - margin.bottom;
 
         const x = d3.time.scale()
             .range([0, width]);
 
+            
         const y = d3.scale.linear()
            .range([height, 0]);
            
+           
+        /*
+        const y = d3.scale.log()
+            .base(Math.E)
+            .range([height, 0]);
+            */
+
+        console.log(y(1), y(0.00001), y(5), y(0));
+
+        if(selectionExisting) {
+
+            const maxSize = Math.max(chartDataG0.length, chartDataG1.length);
+
+            if(chartDataG0.length === maxSize) {
+                x.domain(d3.extent(chartDataG0, function(d) { return d.date; }));
+                y.domain(d3.extent(chartDataG0, function(d) { return d.value; }));
+            } else {
+                x.domain(d3.extent(chartDataG1, function(d) { return d.date; }));
+                y.domain(d3.extent(chartDataG1, function(d) { return d.value; }));
+            } 
+
+        } else {
+
+            x.domain(d3.extent(chartData, function(d) { return d.date; }));
+            y.domain(d3.extent(chartData, function(d) { return d.value; }));
+        }
+
 
         const xAxis = d3.svg.axis()
             .scale(x)
@@ -211,7 +249,8 @@ class Chart extends React.Component {
 
         const yAxis = d3.svg.axis()
             .scale(y)
-            .orient("left");
+            .orient("left")
+            .tickFormat(d3.format("s"));
 
         const line = d3.svg.line()
             .x(function(d) { return x(d.date); })
@@ -223,10 +262,6 @@ class Chart extends React.Component {
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-
-        x.domain(d3.extent(chartData, function(d) { return d.date; }));
-        y.domain(d3.extent(chartData, function(d) { return d.value; }));
 
         svg.append("g")
             .attr("class", "x axis")
@@ -251,7 +286,7 @@ class Chart extends React.Component {
 
             svg.append("path")
                 .datum(chartDataGNRegression.line)
-                .attr("class", "line-blue-bright")
+                .attr("class", "line-blue")
                 .style("stroke-dasharray", "10,10")
                 .attr("d", line);
 
@@ -262,7 +297,7 @@ class Chart extends React.Component {
 
             svg.append("path")
                 .datum(chartDataG0Regression.line)
-                .attr("class", "line-blue-bright")
+                .attr("class", "line-red")
                 .style("stroke-dasharray", "10,10")
                 .attr("d", line);
 
@@ -273,7 +308,7 @@ class Chart extends React.Component {
 
             svg.append("path")
                 .datum(chartDataG1Regression.line)
-                .attr("class", "line-blue-bright")
+                .attr("class", "line-yellow")
                 .style("stroke-dasharray", "10,10")
                 .attr("d", line);
 
