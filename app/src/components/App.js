@@ -14,6 +14,8 @@ class App extends React.Component {
         this.stationData = [];
         this.waterDataMeta = [];
         this.waterData = [];
+
+        this.filteredData = [];
     }
 
     componentDidMount() {    
@@ -44,11 +46,16 @@ class App extends React.Component {
                     }
                 });
 
+                this.filteredData = this.waterData.toList();
+
                 props.onDataLoaded();
             }
         });
     }
 
+    /**
+     * Returns a string format of a date object that can be used as a default value for a FormControl of type date
+     */
     dateToString(date) {
 
         let monthString = date.getMonth() + 1;
@@ -60,23 +67,31 @@ class App extends React.Component {
         return "" + date.getFullYear() + "-" + monthString + "-" + date.getDate();
     }
 
-    cleanData(data, fromTime, tillTime) {
+    /**
+     * Takes the date list as input and removes all entries where the timestamp is not betwen the fromTime and the tillTime
+     * and the Depth is not between the fromDepth and the tillDepth and returns it. 
+     */
+    cleanData(data, fromTime, tillTime, fromDepth, tillDepth) {
 
         let result = Immutable.List();
 
         data.forEach((e, k) => { 
-            if(k == 1) {
-                console.log(e);
-            }
             if(e[propToColumn('TimeStamp')] > fromTime && e[propToColumn('TimeStamp')] < tillTime) {
-                result = result.insert(k, e)
+                if( e[propToColumn('Depth')] > fromDepth && e[propToColumn('Depth')] < tillDepth) {
+                    result = result.push(e);
+                }
             }
 
         });
 
-        console.log(result);
+        return result;
+    }
 
-        return data;
+    componentWillUpdate( nextProps, nextState) {
+        const props = this.props;
+        if(props.fromDepth !== nextProps.fromDepth || props.tillDepth !== nextProps.tillDepth || props.fromDate.getTime() !== nextProps.fromDate.getTime() || props.tillDate.getTime() !== nextProps.tillDate.getTime()) {
+            this.filteredData = this.cleanData(this.waterData, nextProps.fromDate, nextProps.tillDate, nextProps.fromDepth, nextProps.tillDepth);
+        }
     }
 
     render() {
@@ -84,6 +99,7 @@ class App extends React.Component {
         const props = this.props;
 
         const onDateChange = () => {
+            console.log(new Date(document.getElementById('formInlineDateStart').value), new Date(document.getElementById('formInlineDateEnd').value));
             props.setTimeRange(new Date(document.getElementById('formInlineDateStart').value), new Date(document.getElementById('formInlineDateEnd').value));
         };
 
@@ -177,10 +193,8 @@ class App extends React.Component {
                                 {propertyOptions}
                             </DropdownButton>  
                             <Button onClick={() => props.clearProperties()}>Clear All Properties</Button>                                
-                        </ButtonGroup>
-                
-                
-                        <ChartListContainer meta={this.waterDataMeta} data={this.cleanData(this.waterData, props.fromDate, props.tillDate)}/>
+                        </ButtonGroup>         
+                        <ChartListContainer meta={this.waterDataMeta} data={this.filteredData}/>
                     </div>
                 </div>
             </div>

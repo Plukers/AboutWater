@@ -13,7 +13,9 @@ const PropertyFilter = (state  = Immutable.Set(), action) => {
             if(state.has(action.property)) {
                 return state.delete(action.property);
             } else {
-                return state.add(action.property);
+                let tmpState = state.reverse();
+                tmpState = tmpState.add(action.property);
+                return tmpState.reverse();
             }
 
         case DESELECT_ALL_PROPERTY_SELECTION:

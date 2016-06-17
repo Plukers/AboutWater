@@ -9,6 +9,32 @@ import { propToColumn } from '../util/PropToColumn'
 
 class Chart extends React.Component {
 
+    /**
+     * Calculetes the regression for a given regression object and sets the slope and yInterset in the given object as well as the line
+     */
+    calculateRegression(regressionObject, data) {
+
+        const n = regressionObject.n;
+        const sumDate = regressionObject.sumDate;
+        const sumValue = regressionObject.sumValue;
+        const dateTimesValue = regressionObject.dateTimesValue;
+        const dateSquare = regressionObject.dateSquare;
+        const valueSquare = regressionObject.valueSquare;
+
+        const denominator = (n * dateSquare) - Math.pow(sumDate, 2);
+
+        regressionObject.yIntercept = (sumValue * dateSquare - sumDate * dateTimesValue)/denominator;
+        regressionObject.slope = ((n * dateTimesValue) - (sumDate * sumValue))/denominator;
+
+        const slope = regressionObject.slope;
+        const yIntercept = regressionObject.yIntercept;
+
+        regressionObject.line.push({date: data[0].date, value: slope * data[0].date.getTime() + yIntercept});
+        regressionObject.line.push({date: data[data.length - 1].date, value: slope * data[data.length - 1].date.getTime() + yIntercept});
+
+        console.log(regressionObject);
+    }
+
     render() {
         const props = this.props;
 
@@ -20,64 +46,156 @@ class Chart extends React.Component {
         let chartDataMapG1 = Immutable.OrderedMap();
 
         props.data.forEach((e, k) => {
-            if(!isNaN(e[propToColumn(props.property)])) {
-                if(e[propToColumn('TimeStamp')] > props.fromTime && e[propToColumn('TimeStamp')] < props.tillTime) {
-                    if( e[propToColumn('Depth')] > props.fromDepth && e[propToColumn('Depth')] < props.tillDepth) {
-                        if(selectionExisting) {
-                            if(this.props.selectedG0.has(e[propToColumn('Station.Number')])) {
-                                if(chartDataMapG0.has(e[0])) {
-                                    chartDataMapG0 = chartDataMapG0.set(e[propToColumn('TimeStamp')], (chartDataMapG0.get(e[propToColumn('TimeStamp')]) + e[propToColumn(props.property)]) / 2);
-                                } else {
-                                    chartDataMapG0 = chartDataMapG0.set(e[propToColumn('TimeStamp')], e[propToColumn(props.property)]);
-                                }
-                            } else if(this.props.selectedG1.has(e[propToColumn('Station.Number')])) {
-                                if(chartDataMapG1.has(e[0])) {
-                                    chartDataMapG1 = chartDataMapG1.set(e[propToColumn('TimeStamp')], (chartDataMapG1.get(e[propToColumn('TimeStamp')]) + e[propToColumn(props.property)]) / 2);
-                                } else {
-                                    chartDataMapG1 = chartDataMapG1.set(e[propToColumn('TimeStamp')], e[propToColumn(props.property)]);
-                                }
-                            } else {
-                                if(chartDataMapGN.has(e[0])) {
-                                    chartDataMapGN = chartDataMapGN.set(e[propToColumn('TimeStamp')], (chartDataMapGN.get(e[propToColumn('TimeStamp')]) + e[propToColumn(props.property)]) / 2);
-                                } else {
-                                    chartDataMapGN = chartDataMapGN.set(e[propToColumn('TimeStamp')], e[propToColumn(props.property)]);
-                                }
-                            }
-                        }
-                        if(chartDataMap.has(e[0])) {
-                            chartDataMap = chartDataMap.set(e[propToColumn('TimeStamp')], (chartDataMap.get(e[propToColumn('TimeStamp')]) + e[propToColumn(props.property)]) / 2);
-                        } else {
-                            chartDataMap = chartDataMap.set(e[propToColumn('TimeStamp')], e[propToColumn(props.property)]);
-                        }
+            if(selectionExisting) {
+                if(this.props.selectedG0.has(e[propToColumn('Station.Number')])) {
+                    if(chartDataMapG0.has(e[0])) {
+                        chartDataMapG0 = chartDataMapG0.set(e[propToColumn('TimeStamp')], (chartDataMapG0.get(e[propToColumn('TimeStamp')]) + e[propToColumn(props.property)]) / 2);
+                    } else {
+                        chartDataMapG0 = chartDataMapG0.set(e[propToColumn('TimeStamp')], e[propToColumn(props.property)]);
+                    }
+                } else if(this.props.selectedG1.has(e[propToColumn('Station.Number')])) {
+                    if(chartDataMapG1.has(e[0])) {
+                        chartDataMapG1 = chartDataMapG1.set(e[propToColumn('TimeStamp')], (chartDataMapG1.get(e[propToColumn('TimeStamp')]) + e[propToColumn(props.property)]) / 2);
+                    } else {
+                        chartDataMapG1 = chartDataMapG1.set(e[propToColumn('TimeStamp')], e[propToColumn(props.property)]);
+                    }
+                } else {
+                    if(chartDataMapGN.has(e[0])) {
+                        chartDataMapGN = chartDataMapGN.set(e[propToColumn('TimeStamp')], (chartDataMapGN.get(e[propToColumn('TimeStamp')]) + e[propToColumn(props.property)]) / 2);
+                    } else {
+                        chartDataMapGN = chartDataMapGN.set(e[propToColumn('TimeStamp')], e[propToColumn(props.property)]);
                     }
                 }
             }
+            if(chartDataMap.has(e[0])) {
+                chartDataMap = chartDataMap.set(e[propToColumn('TimeStamp')], (chartDataMap.get(e[propToColumn('TimeStamp')]) + e[propToColumn(props.property)]) / 2);
+            } else {
+                chartDataMap = chartDataMap.set(e[propToColumn('TimeStamp')], e[propToColumn(props.property)]);
+            }
         });
 
+        const chartDataRegression= { 
+            n: 0,
+            sumDate: 0,
+            sumValue: 0,
+            dateTimesValue: 0, 
+            dateSquare: 0, 
+            valueSquare: 0,
+            slope: 0,
+            yIntercept: 0,
+            line: []
+        };
 
         const chartData = [];
         chartDataMap.forEach((v, k) => {
             chartData.push({date: k, value: v});
+
+            const dateTime = k.getTime();
+            
+            chartDataRegression.sumDate += dateTime;
+            chartDataRegression.sumValue += v;
+            chartDataRegression.dateTimesValue += dateTime * v;
+            chartDataRegression.dateSquare += Math.pow(dateTime, 2); 
+            chartDataRegression.valueSquare += Math.pow(v, 2);
         });
 
-        const chartDataGN = [];
-        chartDataMapGN.forEach((v, k) => {
-            chartDataGN.push({date: k, value: v});
-        });
+        chartDataRegression.n = chartData.length;
+        this.calculateRegression(chartDataRegression, chartData);
 
-        const chartDataG0 = [];
-        chartDataMapG0.forEach((v, k) => {
-            chartDataG0.push({date: k, value: v});
-        });
+        if(selectionExisting) {
 
-        const chartDataG1 = [];
-        chartDataMapG1.forEach((v, k) => {
-            chartDataG1.push({date: k, value: v});
-        });
+            const chartDataGNRegression= { 
+                n: 0,
+                sumDate: 0,
+                sumValue: 0,
+                dateTimesValue: 0, 
+                dateSquare: 0, 
+                valueSquare: 0,
+                slope: 0,
+                yIntercept: 0,
+                line: []
+            };
 
-        const margin = {top: 20, right: 20, bottom: 30, left: 50};
-        const width = 870 - margin.left - margin.right;
-        const height = 200 - margin.top - margin.bottom;
+            const chartDataGN = [];
+            chartDataMapGN.forEach((v, k) => {
+                chartDataGN.push({date: k, value: v});
+
+                const dateTime = k.getTime();
+
+                chartDataGNRegression.sumDate += dateTime;
+                chartDataGNRegression.sumValue += v;
+                chartDataGNRegression.dateTimesValue += dateTime * v;
+                chartDataGNRegression.dateSquare += Math.pow(dateTime, 2); 
+                chartDataGNRegression.valueSquare += Math.pow(v, 2);
+            });
+
+            chartDataGNRegression.n = chartDataGN.length;
+
+            this.calculateRegression(chartDataGNRegression , chartDataGN);
+
+            const chartDataG0Regression= { 
+                n: 0,
+                sumDate: 0,
+                sumValue: 0,
+                dateTimesValue: 0, 
+                dateSquare: 0, 
+                valueSquare: 0,
+                slope: 0,
+                yIntercept: 0,
+                line: []
+            };
+        
+            const chartDataG0 = [];
+            chartDataMapG0.forEach((v, k) => {
+                chartDataG0.push({date: k, value: v});
+
+                const dateTime = k.getTime();
+
+                chartDataG0Regression.sumDate += dateTime;
+                chartDataG0Regression.sumValue += v;
+                chartDataG0Regression.dateTimesValue += dateTime * v;
+                chartDataG0Regression.dateSquare += Math.pow(dateTime, 2); 
+                chartDataG0Regression.valueSquare += Math.pow(v, 2);
+            });
+
+            chartDataG0Regression.n = chartDataG0.length;
+
+            this.calculateRegression(chartDataG0Regression , chartDataG0);
+
+            const chartDataG1Regression= { 
+                n: 0,
+                sumDate: 0,
+                sumValue: 0,
+                dateTimesValue: 0, 
+                dateSquare: 0, 
+                valueSquare: 0,
+                slope: 0,
+                yIntercept: 0,
+                line: []
+            };
+
+            const chartDataG1 = [];
+            chartDataMapG1.forEach((v, k) => {
+                chartDataG1.push({date: k, value: v});
+
+                const dateTime = k.getTime();
+
+                chartDataG1Regression.sumDate += dateTime;
+                chartDataG1Regression.sumValue += v;
+                chartDataG1Regression.dateTimesValue += dateTime * v;
+                chartDataG1Regression.dateSquare += Math.pow(dateTime, 2); 
+                chartDataG1Regression.valueSquare += Math.pow(v, 2);
+            });
+
+            chartDataG1Regression.n = chartDataG1.length;
+
+            this.calculateRegression(chartDataG1Regression, chartDataG1);
+
+            }
+
+            const margin = {top: 20, right: 20, bottom: 30, left: 50};
+            const width = 870 - margin.left - margin.right;
+            const height = 200 - margin.top - margin.bottom;
 
         const x = d3.time.scale()
             .range([0, width]);
@@ -132,8 +250,20 @@ class Chart extends React.Component {
                 .attr("d", line);
 
             svg.append("path")
+                .datum(chartDataGNRegression.line)
+                .attr("class", "line-blue-bright")
+                .style("stroke-dasharray", "10,10")
+                .attr("d", line);
+
+            svg.append("path")
                 .datum(chartDataG0)
                 .attr("class", "line-red")
+                .attr("d", line);
+
+            svg.append("path")
+                .datum(chartDataG0Regression.line)
+                .attr("class", "line-blue-bright")
+                .style("stroke-dasharray", "10,10")
                 .attr("d", line);
 
             svg.append("path")
@@ -141,10 +271,22 @@ class Chart extends React.Component {
                 .attr("class", "line-yellow")
                 .attr("d", line);
 
+            svg.append("path")
+                .datum(chartDataG1Regression.line)
+                .attr("class", "line-blue-bright")
+                .style("stroke-dasharray", "10,10")
+                .attr("d", line);
+
         } else {
             svg.append("path")
                 .datum(chartData)
                 .attr("class", "line-blue")
+                .attr("d", line);
+
+            svg.append("path")
+                .datum(chartDataRegression.line)
+                .attr("class", "line-blue")
+                .style("stroke-dasharray", "10,10")
                 .attr("d", line);
         }
 

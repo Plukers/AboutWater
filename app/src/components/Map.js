@@ -19,6 +19,7 @@ class Map extends React.Component {
 
         L.tileLayer(MB_URL, {attribution: MB_ATTR, id: 'lupro'}).addTo(this.map);
 
+/*
         this.greenIcon = L.icon({
             iconUrl: '../../../images/marker.png',
 
@@ -32,6 +33,7 @@ class Map extends React.Component {
         this.greenIcon.options.iconSize = [21, 30];
 
         console.log(this.greenIcon.options.iconSize);
+*/
 
         this.defaultIcon = L.icon({
             iconUrl: '../../../images/defaultStation.png',
