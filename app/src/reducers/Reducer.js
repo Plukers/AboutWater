@@ -5,7 +5,9 @@ import StationFilter from './StationFilter'
 import PropertyFilter from './PropertyFilter'
 import Data from './Data'
 
-
+/**
+ * Main Reducer, handles state updates.
+ */
 const AppReducer = combineReducers({
   TimeFilter,
   DepthFilter,

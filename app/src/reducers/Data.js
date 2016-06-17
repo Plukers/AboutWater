@@ -3,6 +3,10 @@ import deepFreeze from 'deep-freeze'
 
 import { DATA_LOADED, STATIONS_LOADED } from '../actions/ActionTypes'
 
+/**
+ * Loading state reducer
+ * Handles the loading state of the csv files
+ */
 const Data = (state  = {loaded: false, stationsLoaded: false}, action) => {
 
     deepFreeze(state);   

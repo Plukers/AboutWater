@@ -3,6 +3,10 @@ import deepFreeze from 'deep-freeze'
 
 import { TOGGLE_PROPERTY_SELECTION, DESELECT_ALL_PROPERTY_SELECTION } from '../actions/ActionTypes'
 
+/**
+ * Property reducer
+ * Handles state of selected properties to show
+ */
 const PropertyFilter = (state  = Immutable.Set(), action) => {
 
     deepFreeze(state);   

@@ -8,6 +8,9 @@ import MapContainer from './container/MapContainer'
 import ChartListContainer from './container/ChartListContainer'
 import { propToColumn } from '../util/PropToColumn'
 
+/**
+ * The main component holding the whole app
+ */
 class App extends React.Component {
 
     componentWillMount() {
@@ -68,8 +71,8 @@ class App extends React.Component {
     }
 
     /**
-     * Takes the date list as input and removes all entries where the timestamp is not betwen the fromTime and the tillTime
-     * and the Depth is not between the fromDepth and the tillDepth and returns it. 
+     * Takes the data list as input and returns a new data list where all entries where the timestamp is not betwen the fromTime and the tillTime
+     * and the Depth is not between the fromDepth and the tillDepth are removed
      */
     cleanData(data, fromTime, tillTime, fromDepth, tillDepth) {
 
@@ -168,32 +171,33 @@ class App extends React.Component {
         });
 
         return (
-            <div className='container-fluid'>                
-                <div className='row-fluid'>
+            <div className='container-fluid'>   
+                <div className='row-fluid menu1'>
                     <div className='col-md-6'>
-                        <div className='row input'>
-                            <div className='col-md-12'>
-                                {formInstanceDate}  
-                            </div>
-                            <hr />
-                            <div className='col-md-12'>
-                                {formInstanceDepth}  
-                            </div>
-                            <hr />
-                            <div className='col-md-5'/>
-                            <div className='col-md-7' id='stationSelection'>
-                                {formInstanceSelection}
-                            </div>                            
-                        </div>
-                        <MapContainer stations={this.stationData}/> 
+                        {formInstanceDate}  
                     </div>
                     <div className='col-md-6'>
-                         <ButtonGroup>                                             
+                        {formInstanceDepth}  
+                    </div>
+                </div>
+                <div className='row-fluid menu2'>
+                    <div className='col-md-6'>
+                        {formInstanceSelection}
+                    </div>
+                    <div className='col-md-6'>
+                       <ButtonGroup>                                             
                             <DropdownButton title="Add Property" id="add-property-dropdown">
                                 {propertyOptions}
                             </DropdownButton>  
                             <Button onClick={() => props.clearProperties()}>Clear All Properties</Button>                                
-                        </ButtonGroup>         
+                        </ButtonGroup>    
+                    </div>
+                </div>
+                <div className='row-fluid'>
+                    <div className='col-md-6'>         
+                        <MapContainer stations={this.stationData}/> 
+                    </div>
+                    <div className='col-md-6'>                               
                         <ChartListContainer meta={this.waterDataMeta} data={this.filteredData}/>
                     </div>
                 </div>

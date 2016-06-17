@@ -7,6 +7,10 @@ import {
          CHANGE_SELECTION_GROUP
         } from '../actions/ActionTypes'
 
+/**
+ * Station Reducer
+ * Handles station groups
+ */
 const StationFilter = (state  =  {loaded: false, group: 0, selectedG0: Immutable.Set(), selectedG1: Immutable.Set()}, action) => {
 
     deepFreeze(state);

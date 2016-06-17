@@ -7,6 +7,9 @@ import { Button } from 'react-bootstrap'
 
 import { propToColumn } from '../util/PropToColumn'
 
+/**
+ * A component rendering a chart where the y value is a single property and the x value is the time axis
+ */
 class Chart extends React.Component {
 
     /**
@@ -40,6 +43,11 @@ class Chart extends React.Component {
 
         const selectionExisting =  (0 !== this.props.selectedG0.size) || (0 !== this.props.selectedG1.size);
 
+        /**
+         * ####################################################
+         * Filtering the data according to the station selection groups
+         * ####################################################
+         */
         let chartDataMap = Immutable.OrderedMap();
         let chartDataMapGN = Immutable.OrderedMap();
         let chartDataMapG0 = Immutable.OrderedMap();
@@ -73,6 +81,12 @@ class Chart extends React.Component {
                 chartDataMap = chartDataMap.set(e[propToColumn('TimeStamp')], e[propToColumn(props.property)]);
             }
         });
+
+        /**
+         * ####################################################
+         * Transform data into a D3 friendly form and calculate the regression for each dataset
+         * ####################################################
+         */
 
         const chartDataRegression= { 
             n: 0,
@@ -202,6 +216,11 @@ class Chart extends React.Component {
             this.calculateRegression(chartDataG1Regression, chartDataG1);
         }
 
+         /**
+         * ####################################################
+         * Create Line Graph
+         * ####################################################
+         */
 
         const margin = {top: 20, right: 20, bottom: 30, left: 50};
         const width = 870 - margin.left - margin.right;
@@ -213,15 +232,6 @@ class Chart extends React.Component {
             
         const y = d3.scale.linear()
            .range([height, 0]);
-           
-           
-        /*
-        const y = d3.scale.log()
-            .base(Math.E)
-            .range([height, 0]);
-            */
-
-        console.log(y(1), y(0.00001), y(5), y(0));
 
         if(selectionExisting) {
 
@@ -330,7 +340,7 @@ class Chart extends React.Component {
             <div className='chart'>
                 <div className='row chartTitle'>
                     <div className='col-md-11'>
-                        <p className='text-right'>{props.property}</p>
+                        <p className='text-right chartTitle'>{props.property}</p>
                     </div>
                     <div className='col-md-1'>                        
                         <Button onClick={() => props.toggleProperty(props.property)}><span class="glyphicon glyphicon-star" />close</Button>

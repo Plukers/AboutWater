@@ -3,6 +3,10 @@ import deepFreeze from 'deep-freeze'
 
 import { TIME_FROM, TIME_TILL, TIME_RANGE } from '../actions/ActionTypes';
 
+/**
+ * TimeStamp reducer
+ * Handles state of the time range to display
+ */
 const TimeFilter = (state  = Immutable.Map({'from': new Date("1967-04-10 16:15:00"), 'till': new Date("2015-02-24 12:15:00")}), action) => {
 
     deepFreeze(state);

@@ -15,7 +15,7 @@
 .line-blue-bright {
   fill: none;
   stroke-width: 1.2px;
-  stroke: #C3E7F5; }
+  stroke: #797E7F; }
 
 .line-red {
   fill: none;
@@ -27,10 +27,17 @@
   stroke-width: 2px;
   stroke: #8F811D; }
 
+.chartTitle {
+  color: #465358;
+  font-size: 1.3em;
+  font-weight: bold;
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-top: 7px; }
+
 @media (min-width: 768px) {
   #chartList {
     position: absolute;
-    margin-top: 5%;
     top: 0;
     bottom: 0;
     right: 0;

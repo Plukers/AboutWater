@@ -5,6 +5,9 @@ import { DropdownButton, MenuItem } from 'react-bootstrap';
 
 import ChartContainer from './container/ChartContainer'
 
+/**
+ * Component handling a Chart components for every selected property
+ */
 class ChartList extends React.Component {
 
     render() {

@@ -1,3 +1,6 @@
+/**
+ * Maps the name of a property to the number of the column of the property in the data csv file
+ */
 export function propToColumn(property) {
 
     switch (property) {

@@ -1,6 +1,8 @@
 
-$color-group0: #ffa49a;
-$color-group1: #f3ef8f;
+$color-default: #465358 ;
+$color-groupN: #797E7F ;
+$color-group0: #8F3225;
+$color-group1: #8F811D;
 
 
 .axis path,
@@ -17,31 +19,39 @@ $color-group1: #f3ef8f;
 .line-blue {
   fill: none;
   stroke-width: 1.5px;
-  stroke: #465358;
+  stroke: $color-default;
 }
 
 .line-blue-bright {
   fill: none;
   stroke-width: 1.2px;
-  stroke: #C3E7F5;
+  stroke: $color-groupN;
 }
 
 .line-red {
   fill: none;
   stroke-width: 2px;
-  stroke: #8F3225;
+  stroke: $color-group0;
 }
 
 .line-yellow {
   fill: none;
   stroke-width: 2px;
-  stroke: #8F811D;
+  stroke: $color-group1;
+}
+
+.chartTitle {
+  color: $color-default;
+  font-size: 1.3em; 
+  font-weight: bold; 
+  letter-spacing: -1px; 
+  line-height: 1; 
+  margin-top: 7px;
 }
 
 @media (min-width: 768px){
   #chartList {
     position: absolute;
-    margin-top: 5%;
     top: 0;
     bottom: 0;
     right: 0;

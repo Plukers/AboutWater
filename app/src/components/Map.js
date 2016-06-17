@@ -4,6 +4,9 @@ import Immutable from 'immutable'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import L from 'leaflet'
 
+/**
+ * Component rendering a map
+ */
 class Map extends React.Component {
 
     componentDidMount() {
@@ -19,44 +22,28 @@ class Map extends React.Component {
 
         L.tileLayer(MB_URL, {attribution: MB_ATTR, id: 'lupro'}).addTo(this.map);
 
-/*
-        this.greenIcon = L.icon({
-            iconUrl: '../../../images/marker.png',
-
-            iconSize:     [20, 29], // size of the icon
-            iconAnchor:   [10, 29], // point of the icon which will correspond to marker's location
-            popupAnchor:  [0, -29] // point from which the popup should open relative to the iconAnchor
-        });
-
-        console.log(this.greenIcon.options.iconSize);
-
-        this.greenIcon.options.iconSize = [21, 30];
-
-        console.log(this.greenIcon.options.iconSize);
-*/
-
         this.defaultIcon = L.icon({
             iconUrl: '../../../images/defaultStation.png',
 
-            iconSize:     [30, 30], // size of the icon
-            iconAnchor:   [15, 15], // point of the icon which will correspond to marker's location
-            popupAnchor:  [0, -15] // point from which the popup should open relative to the iconAnchor
+            iconSize:     [30, 30], 
+            iconAnchor:   [15, 15], 
+            popupAnchor:  [0, -15] 
         });
 
         this.redIcon = L.icon({
             iconUrl: '../../../images/stationRed.png',
 
-            iconSize:     [30, 30], // size of the icon
-            iconAnchor:   [15, 15], // point of the icon which will correspond to marker's location
-            popupAnchor:  [0, -15] // point from which the popup should open relative to the iconAnchor
+            iconSize:     [30, 30],
+            iconAnchor:   [15, 15], 
+            popupAnchor:  [0, -15] 
         });
 
          this.yellowIcon = L.icon({
             iconUrl: '../../../images/stationYellow.png',
 
-            iconSize:     [30, 30], // size of the icon
-            iconAnchor:   [15, 15], // point of the icon which will correspond to marker's location
-            popupAnchor:  [0, -15] // point from which the popup should open relative to the iconAnchor
+            iconSize:     [30, 30], 
+            iconAnchor:   [15, 15], 
+            popupAnchor:  [0, -15] 
         });
 
 

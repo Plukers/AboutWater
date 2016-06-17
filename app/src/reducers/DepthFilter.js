@@ -3,6 +3,10 @@ import deepFreeze from 'deep-freeze'
 
 import { DEPTH_FROM, DEPTH_TILL, DEPTH_RANGE } from '../actions/ActionTypes'
 
+/**
+ * Depth reducer
+ * Handles state of depth range to show
+ */
 const DepthFilter = (state  = Immutable.Map({'from':0, 'till':40}), action) => {
 
     deepFreeze(state);   
